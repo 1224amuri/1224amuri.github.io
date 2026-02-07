@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boids Flocking Simulation - Jagrut Amuri</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-forest: #1a3a2e;
+            --color-moss: #4a7c59;
+            --color-sage: #8b9d83;
+            --color-sand: #e8d5b7;
+            --color-clay: #c17a5c;
+            --color-mist: #e5e9ec;
+            --color-ink: #2d2d2d;
+            --color-paper: #faf8f5;
+            
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Crimson Pro', serif;
+            --font-sans: 'DM Sans', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-paper);
+            color: var(--color-ink);
+            overflow-x: hidden;
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(250, 248, 245, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(139, 157, 131, 0.2);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-link {
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--color-moss);
+            transform: translateX(-5px);
+        }
+
+        .back-link::before {
+            content: '←';
+            font-size: 1.2rem;
+        }
+
+        .simulation-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--color-forest);
+        }
+
+        .simulation-container {
+            margin-top: 80px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: calc(100vh - 80px);
+        }
+
+        .intro {
+            max-width: 800px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .intro h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--color-forest);
+            margin-bottom: 1rem;
+        }
+
+        .intro p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--color-ink);
+            margin-bottom: 0.5rem;
+        }
+
+        #canvas-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem 0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 2rem;
+            max-width: 800px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .control-btn {
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            background: var(--color-moss);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: var(--color-forest);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-btn:active {
+            transform: translateY(0);
+        }
+
+        .control-btn.secondary {
+            background: var(--color-sage);
+        }
+
+        .control-btn.secondary:hover {
+            background: var(--color-forest);
+        }
+
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .slider-label {
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slider-value {
+            color: var(--color-moss);
+            font-weight: 700;
+        }
+
+        input[type="range"] {
+            width: 200px;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--color-mist);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--color-moss);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: var(--color-forest);
+            transform: scale(1.2);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--color-moss);
+            cursor: pointer;
+            border: none;
+        }
+
+        .stats {
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            color: var(--color-sage);
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .description {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: white;
+            border-left: 4px solid var(--color-moss);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .description h2 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            color: var(--color-forest);
+            margin-bottom: 1rem;
+        }
+
+        .description h3 {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            color: var(--color-moss);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .description p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        .description ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .description li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .description strong {
+            color: var(--color-forest);
+        }
+
+        .code-note {
+            background: var(--color-mist);
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .simulation-title {
+                font-size: 1.2rem;
+            }
+            
+            .simulation-container {
+                padding: 1rem;
+            }
+
+            .controls {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            input[type="range"] {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" class="back-link">Back to Portfolio</a>
+        <h1 class="simulation-title">Boids Flocking Simulation</h1>
+    </header>
+
+    <div class="simulation-container">
+        <div class="intro">
+            <h1>Emergent Flocking Behavior</h1>
+            <p>
+                Watch 1000 boids create complex flocking patterns from three simple rules
+            </p>
+        </div>
+
+        <div id="canvas-container"></div>
+
+        <div class="controls">
+            <button class="control-btn" onclick="resetSimulation()">Reset</button>
+            <button class="control-btn" onclick="togglePause()">Pause/Play</button>
+            <button class="control-btn secondary" onclick="toggleQuadtree()">Toggle Quadtree</button>
+            
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Perception Radius</span>
+                    <span class="slider-value" id="perception-value">30</span>
+                </div>
+                <input type="range" min="10" max="100" value="30" id="perception-slider" oninput="updatePerception(this.value)">
+            </div>
+
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Number of Boids</span>
+                    <span class="slider-value" id="boids-value">1000</span>
+                </div>
+                <input type="range" min="100" max="2000" step="100" value="1000" id="boids-slider" oninput="updateBoidsCount(this.value)">
+            </div>
+        </div>
+
+        <div class="stats" id="fps-counter">FPS: --</div>
+
+        <div class="description">
+            <h2>About This Simulation</h2>
+            <p>
+                This simulation recreates the flocking behavior of birds (murmurations) using an algorithm called "Boids," developed by Craig Reynolds in 1986. Despite the complexity of the patterns that emerge, each individual boid follows just three simple rules:
+            </p>
+
+            <h3>The Three Rules of Flocking</h3>
+            <ul>
+                <li><strong>Alignment:</strong> Steer towards the average heading of nearby boids</li>
+                <li><strong>Cohesion:</strong> Steer towards the average position of nearby boids (stay together)</li>
+                <li><strong>Separation:</strong> Avoid crowding neighbors (maintain personal space)</li>
+            </ul>
+
+            <h3>Quadtree Optimization</h3>
+            <p>
+                To efficiently handle 1000+ boids, this simulation uses a <strong>quadtree data structure</strong>. Instead of checking every boid against every other boid (which would require 1,000,000 calculations per frame), the quadtree spatially organizes the boids into regions.
+            </p>
+            <p>
+                Each boid only checks for neighbors within its perception radius by querying the quadtree, dramatically reducing the computational load. You can toggle the quadtree visualization to see how the space is recursively subdivided.
+            </p>
+
+            <div class="code-note">
+                <strong>Performance tip:</strong> The simulation runs at 60 FPS with 1000 boids thanks to quadtree optimization. Without it, checking all pairs would require ~500,000 distance calculations per frame!
+            </div>
+
+            <h3>What This Demonstrates</h3>
+            <p>
+                This simulation embodies a key principle in complex systems: <strong>sophisticated collective behavior can emerge from simple individual rules</strong>. No boid has knowledge of the overall flock pattern, yet together they create the mesmerizing swirling formations we see in nature.
+            </p>
+            <p>
+                This same principle applies across nature—from ant colonies to neural networks to slime molds. Intelligence and coordination don't always require central control; they can arise from local interactions.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // QUADTREE.JS
+        // ============================================
+        class Point {
+          constructor(x, y, userData) {
+            this.x = x;
+            this.y = y;
+            this.userData = userData;
+          }
+        }
+
+        class Circle {
+          constructor(x, y, r) {
+            this.x = x;
+            this.y = y;
+            this.r = r; 
+          } 
+          
+          contains(point) {
+            let distX = Math.abs(this.x - point.x);
+            let distY = Math.abs(this.y - point.y);
+            let distance = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
+            
+            if (distance <= this.r) {
+              return true;
+            } else {
+              return false;
+            }
+          } 
+
+          intersects(boundary) {
+            let closeX = this.x;
+            let closeY = this.y;
+            if (this.x < boundary.x - boundary.w) {
+              closeX = boundary.x - boundary.w;
+            } else if (closeX > boundary.x + boundary.w) {
+              closeX = boundary.x + boundary.w;
+            }
+            
+            if (this.y > boundary.y + boundary.h) {
+              closeY = boundary.y + boundary.h;
+            } else if (this.y < boundary.y - boundary.h) {
+              closeY = boundary.y - boundary.h;
+            }
+            
+            let distX = Math.abs(this.x - closeX);
+            let distY = Math.abs(this.y - closeY);
+            let distance = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
+          
+            if (distance <= this.r) {
+              return true;
+            } else {
+              return false;
+            }
+          } 
+        }
+          
+        class Rect {
+          constructor(x, y, w, h) {
+            this.x = x; 
+            this.y = y; 
+            this.w = w; 
+            this.h = h;
+          }
+
+          contains(point) {
+            if (point.x >= this.x - this.w && point.x < this.x + this.w && point.y >= this.y - this.h && point.y < this.y + this.h) {
+              return true;
+            } else {
+              return false;
+            }
+          }
+          
+          intersects(boundary) {
+            let boundaryR = boundary.x + boundary.w;
+            let boundaryL = boundary.x - boundary.w;
+            let boundaryT = boundary.y - boundary.h;
+            let boundaryB = boundary.y + boundary.h;
+         
+            let rangeR = this.x + this.w;
+            let rangeL = this.x - this.w;
+            let rangeT = this.y - this.h;
+            let rangeB = this.y + this.h;
+          
+            if (boundaryR >= rangeL &&
+               boundaryL <= rangeR &&
+               boundaryT <= rangeB &&
+               boundaryB >= rangeT) {
+               return true;
+            } else {
+              return false;
+            }
+          }
+        }
+
+        class QuadTree { 
+          constructor(boundary, capacity) {
+            this.boundary = boundary;
+            this.capacity = capacity;
+            this.points = [];
+            this.divided = false;
+          }
+
+          clearQuadtree() {
+            this.points = [];
+            this.divided = false;
+          }
+          
+          insert(point) {
+            if (!this.boundary.contains(point)) {
+              return false;
+            }
+          
+            if (this.points.length < this.capacity) {
+              this.points.push(point);
+              return true;
+            } else {
+              if (!this.divided) {
+                this.subdivide();
+              }
+            
+              if (this.northeast.insert(point)) {
+                return true; 
+              } else if (this.northwest.insert(point)) {
+                return true;
+              } else if (this.southeast.insert(point)) {
+                return true;
+              } else if (this.southwest.insert(point)) {
+                return true;
+              }  
+            } 
+            return false;
+          }
+
+          subdivide() {
+            let x = this.boundary.x; 
+            let y = this.boundary.y;
+            let w = this.boundary.w;
+            let h = this.boundary.h; 
+            
+            let northeastBoundary = new Rect(x + w/2, y - h/2, w/2, h/2);
+            this.northeast = new QuadTree(northeastBoundary, this.capacity);
+            let northwestBoundary = new Rect(x - w/2, y - h/2, w/2, h/2);
+            this.northwest = new QuadTree(northwestBoundary, this.capacity);
+            let southeastBoundary = new Rect(x + w/2, y + h/2, w/2, h/2);
+            this.southeast = new QuadTree(southeastBoundary, this.capacity);
+            let southwestBoundary = new Rect(x - w/2, y + h/2, w/2, h/2);
+            this.southwest = new QuadTree(southwestBoundary, this.capacity);
+          
+            this.divided = true;
+          }
+
+          query(range, found) {
+            if (!range.intersects(this.boundary)) {
+              return false;
+            } else {
+              for (let i = 0; i < this.points.length; i++) {
+                if (range.contains(this.points[i])) {
+                  found.push(this.points[i].userData);
+                }
+              }
+              
+              if (this.divided) {
+                this.northeast.query(range, found);
+                this.northwest.query(range, found);
+                this.southeast.query(range, found);
+                this.southwest.query(range, found);
+              }
+            }
+            
+            return found;
+          }
+
+          display() {
+            noFill();
+            stroke(139, 157, 131, 100);
+            strokeWeight(0.5);
+            rectMode(CENTER);
+            rect(this.boundary.x, this.boundary.y, this.boundary.w * 2, this.boundary.h * 2);
+
+            if (this.divided) {
+              this.northeast.display();
+              this.northwest.display();
+              this.southeast.display();
+              this.southwest.display();
+            }
+          }
+        }
+
+        // ============================================
+        // BOIDS.JS
+        // ============================================
+        class Boid {
+          constructor(x, y) {
+            this.position = createVector(x, y);
+            this.velocity = p5.Vector.random2D();
+            this.velocity.mult(random(-3, 3));
+            this.acceleration = createVector(0, 0);  
+            this.maxSpeed = 3; 
+            this.maxForce = 0.2;
+          }
+          
+          edges() {
+            if (this.position.x > width) {
+              this.position.x = 0;
+            } else if (this.position.x < 0) {
+              this.position.x = width;
+            }
+            
+            if (this.position.y > height) {
+              this.position.y = 0;
+            } else if (this.position.y < 0) {
+              this.position.y = height;
+            }
+          }
+          
+          alignment(boids) {
+            let steering = createVector(); 
+            let total = 0;
+            
+            for (let i = 0; i < boids.length; i++) {
+              let distance = dist(this.position.x, this.position.y, boids[i].position.x, boids[i].position.y);
+              if (boids[i] != this && distance < perceptionRadius) {
+                steering.add(boids[i].velocity);
+                total += 1;
+              } 
+            }
+            
+            if (total > 0) {
+              steering.div(total);
+              steering.setMag(this.maxSpeed);
+              steering.sub(this.velocity);
+              steering.limit(this.maxForce);
+            }  
+          
+            return steering; 
+          }
+          
+          cohesion(boids) {
+            let steering = createVector();
+            let total = 0;
+            for (let i = 0; i < boids.length; i++) {
+              let distance = dist(this.position.x, this.position.y, boids[i].position.x, boids[i].position.y);
+              if (boids[i] != this && distance < perceptionRadius) {
+                steering.add(boids[i].position);
+                total += 1;
+              }
+            }
+            
+            if (total > 0) {
+              steering.div(total);
+              steering.sub(this.position);
+              steering.setMag(this.maxSpeed);
+              steering.sub(this.velocity);
+              steering.limit(this.maxForce);
+            }
+            
+            return steering;
+          }
+          
+          seperation(boids) {
+            let steering = createVector();
+            let total = 0;
+            
+            for (let i = 0; i < boids.length; i++) {
+              let distance = dist(this.position.x, this.position.y, boids[i].position.x, boids[i].position.y);
+              if (boids[i] != this && distance < perceptionRadius && distance > 0) {
+                let neighbourVector = p5.Vector.sub(this.position, boids[i].position);
+                neighbourVector.div(distance * distance);
+                steering.add(neighbourVector);
+                total += 1;
+              }
+            }
+          
+            if (total > 0) {
+              steering.div(total);
+              steering.setMag(this.maxSpeed);
+              steering.sub(this.velocity);
+              steering.limit(this.maxForce);
+            }
+          
+            return steering;
+          }
+          
+          flock(boids) {
+            let alignment = this.alignment(boids);
+            let cohesion = this.cohesion(boids);
+            let seperation = this.seperation(boids);
+            
+            this.acceleration.add(alignment);
+            this.acceleration.add(cohesion); 
+            this.acceleration.add(seperation); 
+          }
+          
+          update() {
+            this.edges();
+            this.velocity.add(this.acceleration);
+            this.position.add(this.velocity);
+            this.acceleration.mult(0);
+          }
+          
+          display() { 
+            noStroke();
+            fill(0);
+            ellipse(this.position.x, this.position.y, 2, 2);
+          }
+        }
+
+        // ============================================
+        // SKETCH.JS (MODIFIED WITH CONTROLS)
+        // ============================================
+        let boids = [];
+        let num = 1000;
+        let quadtree;
+        let boundary;
+        let capacity = 10;
+        let perceptionRadius = 30;
+        let isPaused = false;
+        let showQuadtree = true;
+
+        function setup() {
+          let canvas = createCanvas(500, 500);
+          canvas.parent('canvas-container');
+          
+          boundary = new Rect(width / 2, height / 2, width / 2, height / 2);
+          quadtree = new QuadTree(boundary, capacity);
+          
+          for (let i = 0; i < num; i++) {
+            boids.push(new Boid(random(width), random(height)));
+          }
+        }
+
+        function draw() {
+          background(220);
+          
+          // Update FPS counter
+          if (frameCount % 10 === 0) {
+            document.getElementById('fps-counter').textContent = 'FPS: ' + Math.round(frameRate());
+          }
+          
+          if (!isPaused) {
+            quadtree.clearQuadtree();
+            
+            for (let i = 0; i < num; i++) {
+              let p = new Point(boids[i].position.x, boids[i].position.y, boids[i]);
+              quadtree.insert(p);
+            }
+            
+            for (let i = 0; i < num; i++) {
+              let range = new Circle(boids[i].position.x, boids[i].position.y, perceptionRadius);
+              let neighbors = [];
+              quadtree.query(range, neighbors);
+              boids[i].flock(neighbors);
+              boids[i].update();
+              boids[i].display();
+            }
+          } else {
+            // Still display boids when paused
+            for (let i = 0; i < num; i++) {
+              boids[i].display();
+            }
+          }
+          
+          if (showQuadtree) {
+            quadtree.display();
+          }
+        }
+
+        // ============================================
+        // CONTROL FUNCTIONS
+        // ============================================
+        function resetSimulation() {
+          boids = [];
+          num = parseInt(document.getElementById('boids-slider').value);
+          for (let i = 0; i < num; i++) {
+            boids.push(new Boid(random(width), random(height)));
+          }
+        }
+
+        function togglePause() {
+          isPaused = !isPaused;
+        }
+
+        function toggleQuadtree() {
+          showQuadtree = !showQuadtree;
+        }
+
+        function updatePerception(value) {
+          perceptionRadius = parseInt(value);
+          document.getElementById('perception-value').textContent = value;
+        }
+
+        function updateBoidsCount(value) {
+          num = parseInt(value);
+          document.getElementById('boids-value').textContent = value;
+          // Don't auto-reset, let user click reset button
+        }
+    </script>
+</body>
+</html>
