@@ -51,6 +51,7 @@
             font-family: var(--font-display);
             font-weight: 700;
             line-height: 1.2;
+            
         }
 
         h1 { font-size: clamp(3rem, 8vw, 6rem); }
@@ -155,9 +156,27 @@
             z-index: -1;
         }
 
+        .hero-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            opacity: 0.30;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         .hero-content {
             max-width: 900px;
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
         .hero-title {
@@ -182,14 +201,15 @@
         }
 
         .hero-name {
-            font-size: clamp(2rem, 4vw, 3rem);
+            font-size: clamp(5rem, 7vw, 6rem);
             color: var(--color-moss);
             margin-bottom: var(--space-xs);
         }
 
         .hero-subtitle {
             font-family: var(--font-sans);
-            font-size: 1rem;
+            font-size: 2rem;
+            font-weight: 500; 
             color: var(--color-sage);
             letter-spacing: 0.1em;
             text-transform: uppercase;
@@ -286,17 +306,89 @@
             margin-bottom: var(--space-md);
         }
 
+        /* Image Styles */
+        .project-image,
+        .project-images {
+            margin: var(--space-md) 0;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .project-images {
+            display: grid;
+            gap: var(--space-md);
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+		.project-images.SLE-large {
+    		grid-template-columns: 1fr;  /* Makes images full width instead of side-by-side */
+		}
+
+		.project-images.SLE-large img {
+  		 	max-height: 600px;  /* Or whatever height you want */
+		}
+
+		.project-images.everyday-large {
+    		grid-template-columns: 1fr;  /* Makes images full width instead of side-by-side */
+		}
+
+		.project-images.everyday-large img {
+  		 	max-height: 600px;  /* Or whatever height you want */
+		}
+
+		.project-images.river-layout {
+    		display: grid;
+    		grid-template-columns: 1fr 1fr;  /* Two columns */
+    		grid-template-rows: auto auto;   /* Two rows */
+    		gap: var(--space-md);
+		}
+
+		.project-images.river-layout img:first-child {
+   			 grid-column: 1 / -1;  /* First image spans both columns (full width) */
+		}
+
+        .project-images img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .project-images img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+        }
+
         /* About Section */
         .about {
             background: linear-gradient(to bottom, var(--color-paper), var(--color-mist));
         }
 
         .about-content {
-            max-width: 800px;
+            max-width: 1200px;
         }
 
         .about-content p {
             margin-bottom: var(--space-md);
+        }
+
+        .about-image {
+            margin: var(--space-lg) 0;
+            text-align: center;
+        }
+
+        .about-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
         }
 
         /* Principles Section */
@@ -379,6 +471,18 @@
             margin-bottom: var(--space-xl);
         }
 
+        .practice-image {
+            margin: var(--space-md) 0 var(--space-xl) 0;
+        }
+
+        .practice-image img {
+            width: 100%;
+            max-height: 800px;
+            object-fit: cover;
+            border-radius: 4px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
+        }
+
         .projects {
             display: flex;
             flex-direction: column;
@@ -416,7 +520,7 @@
 
         .project-meta {
             font-family: var(--font-sans);
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             color: var(--color-sage);
             display: flex;
             gap: var(--space-xs);
@@ -433,13 +537,8 @@
 
         .project-bridge {
             color: var(--color-moss);
+            font-size: 1.5rem;
             font-weight: 500;
-        }
-
-        .project-impact {
-            font-family: var(--font-sans);
-            font-weight: 600;
-            color: var(--color-clay);
         }
 
         /* Ecology Projects */
@@ -559,6 +658,17 @@
             color: var(--color-ink);
         }
 
+        /* Clickable card */
+        a.next-project-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        a.next-project-link .next-project {
+            cursor: pointer;
+        }
+
         /* Footer */
         .footer {
             background: var(--color-forest);
@@ -610,6 +720,10 @@
             section {
                 padding: var(--space-xl) 0;
             }
+
+            .project-images {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 480px) {
@@ -630,12 +744,6 @@
                 font-size: 0.8rem;
             }
         }
-   .card-wrapper {
-  text-decoration: none; /* Removes the underline */
-  color: inherit;        /* Keeps your original text color */
-  display: block;        /* Ensures the link fills the whole card width */
-}
-   
     </style>
 </head>
 <body>
@@ -653,15 +761,15 @@
 
     <section id="hero" class="hero">
         <div class="hero-background"></div>
+        <div class="hero-image">
+            <img src="images/Page_1.jpeg" alt="Portfolio hero">
+        </div>
         <div class="container">
             <div class="hero-content">
-                <h1 class="hero-title">
-                    <span>Selected</span>
-                    <span>Works</span>
-                </h1>
+        
                 <div class="hero-info">
                     <h2 class="hero-name">Jagrut Amuri</h2>
-                    <p class="hero-subtitle">Biologist · Storyteller · 2026</p>
+                    <p class="hero-subtitle">Biologist · Storyteller</p>
                 </div>
                 <p class="hero-description">
                     Exploring ways to enable a prosperous co-existence between humans, our technology and the rest of the natural world.
@@ -687,6 +795,9 @@
                 <p class="lead-text">
                     I work through research, workshops, fieldwork, writing to create meaningful interactions. Designing situations where people feel seen, heard, and capable of reflecting honestly on their relationship with the world.
                 </p>
+                <div class="about-image">
+                    <img src="images/How_i_work.jpeg" alt="How I work">
+                </div>
                 <p>
                     Underlying this is a belief that intelligence and meaning are values not exclusive to humans. I am motivated by a concern for what kinds of futures we are building, and who or what those futures make space for. I reject the binary between technological futures and empathy for life.
                 </p>
@@ -744,6 +855,9 @@
                     I use workshops as a way to bridge together different ways of knowing, rather than treating learning as information transfer. They are designed as participatory spaces where people move between engaging with the content and each other.
                 </p>
             </div>
+            <div class="practice-image">
+                <img src="images/Practice_1.jpeg" alt="Workshop practice">
+            </div>
 
             <div class="projects">
                 <div class="project">
@@ -759,6 +873,10 @@
                         <p class="project-bridge">
                             <strong>The bridge:</strong> Bridging human and non-human intelligence through making. Using the art of origami as a way to observe, understand, and appreciate the ingenuity embedded in natural structures.
                         </p>
+                        <div class="project-images">
+                            <img src="images/Origami_1.jpeg" alt="Origami workshop">
+                            <img src="images/Origami_3.jpeg" alt="Origami nature forms">
+                        </div>
                         <p>
                             Participants folded paper into DNA, tessellations, and seed-like forms inspired by natural structures. Origami became a way to notice how simple constraints give rise to complex form, function elegantly in nature.
                         </p>
@@ -778,6 +896,10 @@
                         <p class="project-bridge">
                             <strong>The bridge:</strong> Understanding how meaning shifts as stories move across mediums and senses.
                         </p>
+                        <div class="project-images">
+                            <img src="images/Srishti_1.jpeg" alt="Visual narrative workshop">
+                            <img src="images/Srishti_2.jpeg" alt="Narrative exploration">
+                        </div>
                         <p>
                             Explored storytelling through images, objects, sound, movement, and space, translating the same narrative across different forms. This two week workshop reframed narrative as things we actively construct, not just consume.
                         </p>
@@ -797,6 +919,9 @@
                         <p class="project-bridge">
                             <strong>The bridge:</strong> Bridging nature and technological wonder through close observation of marine and terrestrial organisms.
                         </p>
+                        <div class="project-image">
+                            <img src="images/Biomimicry_1.jpeg" alt="Biomimicry workshop">
+                        </div>
                         <p>
                             Students explored intertidal and forest ecosystems, observing organisms and discussing how they survive and adapt. Biomimicry became a way to notice that sophisticated problem-solving already exists all around us.
                         </p>
@@ -816,6 +941,11 @@
                         <p class="project-bridge">
                             <strong>The bridge:</strong> Bringing together art, ecology, and community knowledge through shared time along the river.
                         </p>
+                        <div class="project-images river-layout">
+                            <img src="images/River_1.jpeg" alt="River workshop">
+                            <img src="images/River_2.jpeg" alt="River ecology">
+                            <img src="images/River_3.jpeg" alt="Community engagement">
+                        </div>
                         <p>
                             Participants walked the riverbanks, identified plants, shared stories, and created zines using local materials. The workshops created space for intergenerational knowledge exchange.
                         </p>
@@ -834,6 +964,9 @@
                     Mediation at Science Gallery is a form of informal education, where mediators support visitors in engaging with exhibits through conversation. I experienced this as a way of thinking alongside people.
                 </p>
             </div>
+            <div class="practice-image">
+                <img src="images/Practice_2.jpeg" alt="Mediation practice">
+            </div>
 
             <div class="projects">
                 <div class="project">
@@ -849,6 +982,10 @@
                         <p class="project-bridge">
                             <strong>Intention:</strong> Synthesising ideas in response to who I was speaking with, without losing complexity or wonder.
                         </p>
+                        <div class="project-images everyday-large">
+                            <img src="images/Everyday_1.jpeg" alt="Everyday mediation">
+                            <img src="images/Everyday_2.jpeg" alt="Visitor engagement">
+                        </div>
                         <p>
                             Conversations emerged through individual attention rather than scripted explanation. Mediation became a way to translate complex ideas into digestible chunks while preserving nuance.
                         </p>
@@ -868,6 +1005,10 @@
                         <p class="project-bridge">
                             <strong>Intention:</strong> Creating conditions for curiosity and participation within structured learning settings.
                         </p>
+                        <div class="project-images SLE-large">
+                            <img src="images/SLE_1.jpeg" alt="Student learning experience">
+                            <img src="images/SLE_2.jpeg" alt="School visit">
+                        </div>
                         <p>
                             Sessions worked with the energy students arrived with, gradually shaping it into shared attention and wonder. Objects became portals for discussion.
                         </p>
@@ -885,6 +1026,10 @@
                         <p class="project-bridge">
                             <strong>Intention:</strong> Using meticulously researched themes to encourage deeper connections with familiar topics.
                         </p>
+                        <div class="project-images">
+                            <img src="images/DesignedExp_1.jpeg" alt="Designed experience">
+                            <img src="images/DesignedExp_2.png" alt="Workshop design">
+                        </div>
                         <p>
                             Created sessions on Umwelt, developed Visual Bingo using close-up images, and rethought feedback systems to encourage higher quality responses.
                         </p>
@@ -903,6 +1048,9 @@
                     My ecological work has been grounded in physical presence - being in forests, rivers and reefs over extended periods. These projects have fundamentally changed who I am and heavily influenced how I see the world.
                 </p>
             </div>
+            <div class="practice-image">
+                <img src="images/Practice_3.jpeg" alt="Ecology fieldwork">
+            </div>
 
             <div class="ecology-projects">
                 <div class="ecology-project">
@@ -919,6 +1067,9 @@
                             <p class="project-bridge">
                                 <strong>Intention:</strong> Understanding the river's health and proposing restoration pathways through ecological and social lenses.
                             </p>
+                            <div class="project-image">
+                                <img src="images/Riparian_1.png" alt="Riparian ecology work">
+                            </div>
                             <div class="role-section">
                                 <h4>My Role:</h4>
                                 <p>
@@ -949,6 +1100,9 @@
                             <p class="project-bridge">
                                 <strong>Intention:</strong> Learning how coral reef systems function and recover while supporting conservation work.
                             </p>
+                            <div class="project-image">
+                                <img src="images/Marine_1.jpeg" alt="Marine ecology work">
+                            </div>
                             <div class="role-section">
                                 <h4>My Role:</h4>
                                 <p>
@@ -986,13 +1140,13 @@
                         Working on a series of origami-based kinetic sculptures as an art practice. Exploring how paper folding and mechanical principles can result in movement and play.
                     </p>
                 </div>
-               <a href="boids.html" class="card-wrapper">
-                <div class="next-project">
-                    <h3>Simulating Natural Behaviour with Code</h3>
-                    <p>
-                        Learning to code using p5.js to simulate natural behaviours like slime mold movement and bird murmurations. Focusing on how simple rules give rise to complex biological patterns.
-                    </p>
-                </div>
+                <a href="boids.html" class="next-project-link">
+                    <div class="next-project">
+                        <h3>Simulating Natural Behaviour with Code</h3>
+                        <p>
+                            Learning to code using p5.js to simulate natural behaviours like slime mold movement and bird murmurations. Focusing on how simple rules give rise to complex biological patterns.
+                        </p>
+                    </div>
                 </a>
             </div>
         </div>
@@ -1006,7 +1160,7 @@
     </footer>
 
     <script>
-        // Smooth scroll for navigation
+        // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -1021,7 +1175,7 @@
             });
         });
 
-        // Intersection Observer for animations
+        // Intersection Observer
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1034,7 +1188,7 @@
             observer.observe(el);
         });
 
-        // Active nav link
+        // Active nav
         const sections = document.querySelectorAll('section[id]');
         const navLinks = document.querySelectorAll('.nav-links a');
 
@@ -1058,7 +1212,7 @@
                 }
             });
 
-            // Nav shadow on scroll
+            // Nav shadow
             const nav = document.querySelector('.nav');
             if (window.pageYOffset > 100) {
                 nav.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
@@ -1067,7 +1221,7 @@
             }
         });
 
-        // Parallax hero background
+        // Parallax
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
             const heroBackground = document.querySelector('.hero-background');
@@ -1090,8 +1244,6 @@
                 clickCount = 0;
             }
         });
-
-        console.log('🌿 Portfolio loaded');
-    </script> 
+    </script>
 </body>
 </html>
