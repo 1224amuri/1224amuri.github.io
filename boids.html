@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Boids Flocking Simulation - Jagrut Amuri</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -124,7 +124,7 @@
             flex-wrap: wrap;
             justify-content: center;
             margin-top: 2rem;
-            max-width: 800px;
+            max-width: 900px;
         }
 
         .control-group {
@@ -173,6 +173,7 @@
             background: white;
             border-radius: 4px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            min-width: 220px;
         }
 
         .slider-label {
@@ -190,8 +191,16 @@
             font-weight: 700;
         }
 
+        .slider-description {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            color: var(--color-sage);
+            line-height: 1.3;
+            margin-top: 0.25rem;
+        }
+
         input[type="range"] {
-            width: 200px;
+            width: 100%;
             height: 6px;
             border-radius: 3px;
             background: var(--color-mist);
@@ -302,6 +311,10 @@
                 width: 100%;
             }
 
+            .slider-container {
+                width: 100%;
+            }
+
             input[type="range"] {
                 width: 100%;
             }
@@ -318,7 +331,7 @@
         <div class="intro">
             <h1>Emergent Flocking Behavior</h1>
             <p>
-                Watch 1000 boids create complex flocking patterns from three simple rules
+                Watch 900 boids create complex flocking patterns from three simple rules
             </p>
         </div>
 
@@ -326,23 +339,60 @@
 
         <div class="controls">
             <button class="control-btn" onclick="resetSimulation()">Reset</button>
-            <button class="control-btn" onclick="togglePause()">Pause/Play</button>
             <button class="control-btn secondary" onclick="toggleQuadtree()">Toggle Quadtree</button>
             
             <div class="slider-container">
                 <div class="slider-label">
-                    <span>Perception Radius</span>
-                    <span class="slider-value" id="perception-value">30</span>
+                    <span>Number of Boids</span>
+                    <span class="slider-value" id="numBoidsValue">900</span>
                 </div>
-                <input type="range" min="10" max="100" value="30" id="perception-slider" oninput="updatePerception(this.value)">
+                <input type="range" id="numBoids" min="0" max="1000" value="900" step="10">
+                <div class="slider-description">Total number of agents in the simulation</div>
             </div>
 
             <div class="slider-container">
                 <div class="slider-label">
-                    <span>Number of Boids</span>
-                    <span class="slider-value" id="boids-value">1000</span>
+                    <span>Separation Radius</span>
+                    <span class="slider-value" id="separationRadiusValue">20</span>
                 </div>
-                <input type="range" min="100" max="2000" step="100" value="1000" id="boids-slider" oninput="updateBoidsCount(this.value)">
+                <input type="range" id="separationRadius" min="5" max="100" value="20" step="1">
+                <div class="slider-description">Personal space distance to avoid crowding</div>
+            </div>
+            
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Alignment Radius</span>
+                    <span class="slider-value" id="alignmentRadiusValue">30</span>
+                </div>
+                <input type="range" id="alignmentRadius" min="5" max="100" value="30" step="1">
+                <div class="slider-description">Range to match velocity with neighbors</div>
+            </div>
+            
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Cohesion Radius</span>
+                    <span class="slider-value" id="cohesionRadiusValue">20</span>
+                </div>
+                <input type="range" id="cohesionRadius" min="5" max="100" value="20" step="1">
+                <div class="slider-description">Range to steer toward group center</div>
+            </div>
+            
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Quadtree Capacity</span>
+                    <span class="slider-value" id="quadtreeCapacityValue">3</span>
+                </div>
+                <input type="range" id="quadtreeCapacity" min="1" max="20" value="3" step="1">
+                <div class="slider-description">Max points per quadtree node before subdivision</div>
+            </div>
+            
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Trail Opacity</span>
+                    <span class="slider-value" id="bgOpacityValue">80</span>
+                </div>
+                <input type="range" id="bgOpacity" min="0" max="255" value="80" step="1">
+                <div class="slider-description">Higher values = shorter trails, lower = longer trails</div>
             </div>
         </div>
 
@@ -363,14 +413,14 @@
 
             <h3>Quadtree Optimization</h3>
             <p>
-                To efficiently handle 1000+ boids, this simulation uses a <strong>quadtree data structure</strong>. Instead of checking every boid against every other boid (which would require 1,000,000 calculations per frame), the quadtree spatially organizes the boids into regions.
+                To efficiently handle 900+ boids, this simulation uses a <strong>quadtree data structure</strong>. Instead of checking every boid against every other boid (which would require hundreds of thousands of calculations per frame), the quadtree spatially organizes the boids into regions.
             </p>
             <p>
                 Each boid only checks for neighbors within its perception radius by querying the quadtree, dramatically reducing the computational load. You can toggle the quadtree visualization to see how the space is recursively subdivided.
             </p>
 
             <div class="code-note">
-                <strong>Performance tip:</strong> The simulation runs at 60 FPS with 1000 boids thanks to quadtree optimization. Without it, checking all pairs would require ~500,000 distance calculations per frame!
+                <strong>Performance tip:</strong> The simulation runs at 60 FPS with 900 boids thanks to quadtree optimization. Without it, checking all pairs would require ~400,000 distance calculations per frame!
             </div>
 
             <h3>What This Demonstrates</h3>
@@ -388,398 +438,461 @@
         // QUADTREE.JS
         // ============================================
         class Point {
-          constructor(x, y, userData) {
-            this.x = x;
-            this.y = y;
-            this.userData = userData;
-          }
+            constructor(x, y, userData) {
+                this.x = x;
+                this.y = y;
+                this.userData = userData;
+            }
         }
 
         class Circle {
-          constructor(x, y, r) {
-            this.x = x;
-            this.y = y;
-            this.r = r; 
-          } 
-          
-          contains(point) {
-            let distX = Math.abs(this.x - point.x);
-            let distY = Math.abs(this.y - point.y);
-            let distance = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
+            constructor(x, y, r) {
+                this.x = x;
+                this.y = y;
+                this.r = r; 
+            } 
             
-            if (distance <= this.r) {
-              return true;
-            } else {
-              return false;
-            }
-          } 
+            contains(point) {
+                let distX = Math.abs(this.x - point.x);
+                let distY = Math.abs(this.y - point.y);
+                let distance = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
+                
+                if (distance <= this.r) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } 
 
-          intersects(boundary) {
-            let closeX = this.x;
-            let closeY = this.y;
-            if (this.x < boundary.x - boundary.w) {
-              closeX = boundary.x - boundary.w;
-            } else if (closeX > boundary.x + boundary.w) {
-              closeX = boundary.x + boundary.w;
-            }
-            
-            if (this.y > boundary.y + boundary.h) {
-              closeY = boundary.y + boundary.h;
-            } else if (this.y < boundary.y - boundary.h) {
-              closeY = boundary.y - boundary.h;
-            }
-            
-            let distX = Math.abs(this.x - closeX);
-            let distY = Math.abs(this.y - closeY);
-            let distance = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
-          
-            if (distance <= this.r) {
-              return true;
-            } else {
-              return false;
-            }
-          } 
+            intersects(boundary) {
+                let closeX = this.x;
+                let closeY = this.y;
+                if (this.x < boundary.x - boundary.w) {
+                    closeX = boundary.x - boundary.w;
+                } else if (closeX > boundary.x + boundary.w) {
+                    closeX = boundary.x + boundary.w;
+                }
+                
+                if (this.y > boundary.y + boundary.h) {
+                    closeY = boundary.y + boundary.h;
+                } else if (this.y < boundary.y - boundary.h) {
+                    closeY = boundary.y - boundary.h;
+                }
+                
+                let distX = Math.abs(this.x - closeX);
+                let distY = Math.abs(this.y - closeY);
+                let distance = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
+                
+                if (distance <= this.r) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } 
         }
-          
+        
         class Rect {
-          constructor(x, y, w, h) {
-            this.x = x; 
-            this.y = y; 
-            this.w = w; 
-            this.h = h;
-          }
+            constructor(x, y, w, h) {
+                this.x = x; 
+                this.y = y; 
+                this.w = w; 
+                this.h = h;
+            }
 
-          contains(point) {
-            if (point.x >= this.x - this.w && point.x < this.x + this.w && point.y >= this.y - this.h && point.y < this.y + this.h) {
-              return true;
-            } else {
-              return false;
+            contains(point) {
+                if (point.x >= this.x - this.w && point.x < this.x + this.w && point.y >= this.y - this.h && point.y < this.y + this.h) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
-          }
-          
-          intersects(boundary) {
-            let boundaryR = boundary.x + boundary.w;
-            let boundaryL = boundary.x - boundary.w;
-            let boundaryT = boundary.y - boundary.h;
-            let boundaryB = boundary.y + boundary.h;
-         
-            let rangeR = this.x + this.w;
-            let rangeL = this.x - this.w;
-            let rangeT = this.y - this.h;
-            let rangeB = this.y + this.h;
-          
-            if (boundaryR >= rangeL &&
-               boundaryL <= rangeR &&
-               boundaryT <= rangeB &&
-               boundaryB >= rangeT) {
-               return true;
-            } else {
-              return false;
+            
+            intersects(boundary) {
+                let boundaryR = boundary.x + boundary.w;
+                let boundaryL = boundary.x - boundary.w;
+                let boundaryT = boundary.y - boundary.h;
+                let boundaryB = boundary.y + boundary.h;
+            
+                let rangeR = this.x + this.w;
+                let rangeL = this.x - this.w;
+                let rangeT = this.y - this.h;
+                let rangeB = this.y + this.h;
+                
+                if (boundaryR >= rangeL &&
+                    boundaryL <= rangeR &&
+                    boundaryT <= rangeB &&
+                    boundaryB >= rangeT) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
-          }
         }
 
         class QuadTree { 
-          constructor(boundary, capacity) {
-            this.boundary = boundary;
-            this.capacity = capacity;
-            this.points = [];
-            this.divided = false;
-          }
-
-          clearQuadtree() {
-            this.points = [];
-            this.divided = false;
-          }
-          
-          insert(point) {
-            if (!this.boundary.contains(point)) {
-              return false;
+            constructor(boundary, capacity) {
+                this.boundary = boundary;
+                this.capacity = capacity;
+                this.points = [];
+                this.divided = false;
             }
-          
-            if (this.points.length < this.capacity) {
-              this.points.push(point);
-              return true;
-            } else {
-              if (!this.divided) {
-                this.subdivide();
-              }
-            
-              if (this.northeast.insert(point)) {
-                return true; 
-              } else if (this.northwest.insert(point)) {
-                return true;
-              } else if (this.southeast.insert(point)) {
-                return true;
-              } else if (this.southwest.insert(point)) {
-                return true;
-              }  
-            } 
-            return false;
-          }
 
-          subdivide() {
-            let x = this.boundary.x; 
-            let y = this.boundary.y;
-            let w = this.boundary.w;
-            let h = this.boundary.h; 
+            clearQuadtree() {
+                this.points = [];
+                this.divided = false;
+            }
             
-            let northeastBoundary = new Rect(x + w/2, y - h/2, w/2, h/2);
-            this.northeast = new QuadTree(northeastBoundary, this.capacity);
-            let northwestBoundary = new Rect(x - w/2, y - h/2, w/2, h/2);
-            this.northwest = new QuadTree(northwestBoundary, this.capacity);
-            let southeastBoundary = new Rect(x + w/2, y + h/2, w/2, h/2);
-            this.southeast = new QuadTree(southeastBoundary, this.capacity);
-            let southwestBoundary = new Rect(x - w/2, y + h/2, w/2, h/2);
-            this.southwest = new QuadTree(southwestBoundary, this.capacity);
-          
-            this.divided = true;
-          }
-
-          query(range, found) {
-            if (!range.intersects(this.boundary)) {
-              return false;
-            } else {
-              for (let i = 0; i < this.points.length; i++) {
-                if (range.contains(this.points[i])) {
-                  found.push(this.points[i].userData);
+            insert(point) {
+                if (!this.boundary.contains(point)) {
+                    return false;
                 }
-              }
-              
-              if (this.divided) {
-                this.northeast.query(range, found);
-                this.northwest.query(range, found);
-                this.southeast.query(range, found);
-                this.southwest.query(range, found);
-              }
+                
+                if (this.points.length < this.capacity) {
+                    this.points.push(point);
+                    return true;
+                } else {
+                    if (!this.divided) {
+                        this.subdivide();
+                    }
+                    
+                    if (this.northeast.insert(point)) {
+                        return true; 
+                    } else if (this.northwest.insert(point)) {
+                        return true;
+                    } else if (this.southeast.insert(point)) {
+                        return true;
+                    } else if (this.southwest.insert(point)) {
+                        return true;
+                    }  
+                } 
+                return false;
             }
-            
-            return found;
-          }
 
-          display() {
-            noFill();
-            stroke(139, 157, 131, 100);
-            strokeWeight(0.5);
-            rectMode(CENTER);
-            rect(this.boundary.x, this.boundary.y, this.boundary.w * 2, this.boundary.h * 2);
-
-            if (this.divided) {
-              this.northeast.display();
-              this.northwest.display();
-              this.southeast.display();
-              this.southwest.display();
+            subdivide() {
+                let x = this.boundary.x; 
+                let y = this.boundary.y;
+                let w = this.boundary.w;
+                let h = this.boundary.h; 
+                
+                let northeastBoundary = new Rect(x + w/2, y - h/2, w/2, h/2);
+                this.northeast = new QuadTree(northeastBoundary, this.capacity);
+                let northwestBoundary = new Rect(x - w/2, y - h/2, w/2, h/2);
+                this.northwest = new QuadTree(northwestBoundary, this.capacity);
+                let southeastBoundary = new Rect(x + w/2, y + h/2, w/2, h/2);
+                this.southeast = new QuadTree(southeastBoundary, this.capacity);
+                let southwestBoundary = new Rect(x - w/2, y + h/2, w/2, h/2);
+                this.southwest = new QuadTree(southwestBoundary, this.capacity);
+                
+                this.divided = true;
             }
-          }
+
+            query(range, found) {
+                if (!range.intersects(this.boundary)) {
+                    return false;
+                } else {
+                    for (let i = 0; i < this.points.length; i++) {
+                        if (range.contains(this.points[i])) {
+                            found.push(this.points[i].userData);
+                        }
+                    }
+                    
+                    if (this.divided) {
+                        this.northeast.query(range, found);
+                        this.northwest.query(range, found);
+                        this.southeast.query(range, found);
+                        this.southwest.query(range, found);
+                    }
+                }
+                
+                return found;
+            }
+
+            display() {
+                noFill();
+                stroke(139, 157, 131, 100);
+                strokeWeight(0.5);
+                rectMode(CENTER);
+                rect(this.boundary.x, this.boundary.y, this.boundary.w * 2, this.boundary.h * 2);
+                
+                if (this.divided) {
+                    this.northeast.display();
+                    this.northwest.display();
+                    this.southeast.display();
+                    this.southwest.display();
+                }
+            }
         }
 
         // ============================================
         // BOIDS.JS
         // ============================================
         class Boid {
-          constructor(x, y) {
-            this.position = createVector(x, y);
-            this.velocity = p5.Vector.random2D();
-            this.velocity.mult(random(-3, 3));
-            this.acceleration = createVector(0, 0);  
-            this.maxSpeed = 3; 
-            this.maxForce = 0.2;
-          }
-          
-          edges() {
-            if (this.position.x > width) {
-              this.position.x = 0;
-            } else if (this.position.x < 0) {
-              this.position.x = width;
+            constructor(x, y) {
+                this.position = createVector(x, y);
+                this.velocity = p5.Vector.random2D();
+                this.velocity.mult(random(-3, 3));
+                this.acceleration = createVector(0, 0);  
+                this.maxSpeed = 4; 
+                this.maxForce = 0.5;
             }
             
-            if (this.position.y > height) {
-              this.position.y = 0;
-            } else if (this.position.y < 0) {
-              this.position.y = height;
-            }
-          }
-          
-          alignment(boids) {
-            let steering = createVector(); 
-            let total = 0;
-            
-            for (let i = 0; i < boids.length; i++) {
-              let distance = dist(this.position.x, this.position.y, boids[i].position.x, boids[i].position.y);
-              if (boids[i] != this && distance < perceptionRadius) {
-                steering.add(boids[i].velocity);
-                total += 1;
-              } 
+            edges() {
+                if (this.position.x > width) {
+                    this.position.x = 0;
+                } else if (this.position.x < 0) {
+                    this.position.x = width;
+                }
+                
+                if (this.position.y > height) {
+                    this.position.y = 0;
+                } else if (this.position.y < 0) {
+                    this.position.y = height;
+                }
             }
             
-            if (total > 0) {
-              steering.div(total);
-              steering.setMag(this.maxSpeed);
-              steering.sub(this.velocity);
-              steering.limit(this.maxForce);
-            }  
-          
-            return steering; 
-          }
-          
-          cohesion(boids) {
-            let steering = createVector();
-            let total = 0;
-            for (let i = 0; i < boids.length; i++) {
-              let distance = dist(this.position.x, this.position.y, boids[i].position.x, boids[i].position.y);
-              if (boids[i] != this && distance < perceptionRadius) {
-                steering.add(boids[i].position);
-                total += 1;
-              }
+            alignment(boids) {
+                let steering = createVector(); 
+                let total = 0;
+                
+                for (let i = 0; i < boids.length; i++) {
+                    let distance = dist(this.position.x, this.position.y, boids[i].position.x, boids[i].position.y);
+                    if (boids[i] != this && distance < alignmentRadius) {
+                        steering.add(boids[i].velocity);
+                        total += 1;
+                    } 
+                }
+                
+                if (total > 0) {
+                    steering.div(total);
+                    steering.setMag(this.maxSpeed);
+                    steering.sub(this.velocity);
+                    steering.limit(this.maxForce);
+                }  
+                
+                return steering; 
             }
             
-            if (total > 0) {
-              steering.div(total);
-              steering.sub(this.position);
-              steering.setMag(this.maxSpeed);
-              steering.sub(this.velocity);
-              steering.limit(this.maxForce);
+            cohesion(boids) {
+                let steering = createVector();
+                let total = 0;
+                for (let i = 0; i < boids.length; i++) {
+                    let distance = dist(this.position.x, this.position.y, boids[i].position.x, boids[i].position.y);
+                    if (boids[i] != this && distance < cohesionRadius) {
+                        steering.add(boids[i].position);
+                        total += 1;
+                    }
+                }
+                
+                if (total > 0) {
+                    steering.div(total);
+                    steering.sub(this.position);
+                    steering.setMag(this.maxSpeed);
+                    steering.sub(this.velocity);
+                    steering.limit(this.maxForce);
+                }
+                
+                return steering;
             }
             
-            return steering;
-          }
-          
-          seperation(boids) {
-            let steering = createVector();
-            let total = 0;
-            
-            for (let i = 0; i < boids.length; i++) {
-              let distance = dist(this.position.x, this.position.y, boids[i].position.x, boids[i].position.y);
-              if (boids[i] != this && distance < perceptionRadius && distance > 0) {
-                let neighbourVector = p5.Vector.sub(this.position, boids[i].position);
-                neighbourVector.div(distance * distance);
-                steering.add(neighbourVector);
-                total += 1;
-              }
+            seperation(boids) {
+                let steering = createVector();
+                let total = 0;
+                
+                for (let i = 0; i < boids.length; i++) {
+                    let distance = dist(this.position.x, this.position.y, boids[i].position.x, boids[i].position.y);
+                    if (boids[i] != this && distance < separationRadius && distance > 0) {
+                        let neighbourVector = p5.Vector.sub(this.position, boids[i].position);
+                        neighbourVector.div(distance * distance);
+                        steering.add(neighbourVector);
+                        total += 1;
+                    }
+                }
+                
+                if (total > 0) {
+                    steering.div(total);
+                    steering.setMag(this.maxSpeed);
+                    steering.sub(this.velocity);
+                    steering.limit(this.maxForce);
+                }
+                
+                return steering;
             }
-          
-            if (total > 0) {
-              steering.div(total);
-              steering.setMag(this.maxSpeed);
-              steering.sub(this.velocity);
-              steering.limit(this.maxForce);
-            }
-          
-            return steering;
-          }
-          
-          flock(boids) {
-            let alignment = this.alignment(boids);
-            let cohesion = this.cohesion(boids);
-            let seperation = this.seperation(boids);
             
-            this.acceleration.add(alignment);
-            this.acceleration.add(cohesion); 
-            this.acceleration.add(seperation); 
-          }
-          
-          update() {
-            this.edges();
-            this.velocity.add(this.acceleration);
-            this.position.add(this.velocity);
-            this.acceleration.mult(0);
-          }
-          
-          display() { 
-            noStroke();
-            fill(0);
-            ellipse(this.position.x, this.position.y, 2, 2);
-          }
+            flock(boids) {
+                let alignment = this.alignment(boids);
+                let cohesion = this.cohesion(boids);
+                let seperation = this.seperation(boids);
+                
+                // Apply weights to each behavior
+                alignment.mult(alignmentWeight);
+                cohesion.mult(cohesionWeight); 
+                seperation.mult(separationWeight);
+                
+                this.acceleration.add(alignment);
+                this.acceleration.add(cohesion); 
+                this.acceleration.add(seperation); 
+            }
+            
+            update() {
+                this.edges();
+                this.velocity.add(this.acceleration);
+                this.position.add(this.velocity);
+                this.acceleration.mult(0);
+            }
+            
+            display() { 
+                noStroke();
+                fill(0);
+                ellipse(this.position.x, this.position.y, 4, 4);
+            }
         }
 
         // ============================================
-        // SKETCH.JS (MODIFIED WITH CONTROLS)
+        // SKETCH.JS
         // ============================================
         let boids = [];
-        let num = 1000;
+        let num = 900;
         let quadtree;
         let boundary;
-        let capacity = 10;
-        let perceptionRadius = 30;
-        let isPaused = false;
+        let capacity = 3;
+        
+        // Different radii for each behavior
+        let separationRadius = 20;
+        let alignmentRadius = 30;
+        let cohesionRadius = 20;
+        
+        // Weights for each behavior
+        let separationWeight = 1.05;
+        let alignmentWeight = 1.0;
+        let cohesionWeight = 0.9;
+        
+        // Background opacity
+        let bgOpacity = 80;
+        
+        // Toggle for quadtree display
         let showQuadtree = true;
 
         function setup() {
-          let canvas = createCanvas(500, 500);
-          canvas.parent('canvas-container');
-          
-          boundary = new Rect(width / 2, height / 2, width / 2, height / 2);
-          quadtree = new QuadTree(boundary, capacity);
-          
-          for (let i = 0; i < num; i++) {
-            boids.push(new Boid(random(width), random(height)));
-          }
+            let canvas = createCanvas(800, 800);
+            canvas.parent('canvas-container');
+            boundary = new Rect(width / 2, height / 2, width / 2, height / 2);
+            quadtree = new QuadTree(boundary, capacity);
+            
+            for (let i = 0; i < num; i++) {
+                boids.push(new Boid(random(width), random(height)));
+            }
+            
+            // Setup slider event listeners
+            setupSliders();
         }
 
         function draw() {
-          background(220);
-          
-          // Update FPS counter
-          if (frameCount % 10 === 0) {
-            document.getElementById('fps-counter').textContent = 'FPS: ' + Math.round(frameRate());
-          }
-          
-          if (!isPaused) {
+            background(220, bgOpacity);
+            
+            // Update FPS counter every 10 frames
+            if (frameCount % 10 === 0) {
+                document.getElementById('fps-counter').textContent = 'FPS: ' + Math.round(frameRate());
+            }
+            
+            quadtree = new QuadTree(boundary, capacity);
             quadtree.clearQuadtree();
             
-            for (let i = 0; i < num; i++) {
-              let p = new Point(boids[i].position.x, boids[i].position.y, boids[i]);
-              quadtree.insert(p);
+            for (let i = 0; i < boids.length; i++) {
+                let p = new Point(boids[i].position.x, boids[i].position.y, boids[i]);
+                quadtree.insert(p);
             }
             
-            for (let i = 0; i < num; i++) {
-              let range = new Circle(boids[i].position.x, boids[i].position.y, perceptionRadius);
-              let neighbors = [];
-              quadtree.query(range, neighbors);
-              boids[i].flock(neighbors);
-              boids[i].update();
-              boids[i].display();
+            for (let i = 0; i < boids.length; i++) {
+                let maxRadius = Math.max(separationRadius, alignmentRadius, cohesionRadius);
+                let range = new Circle(
+                    boids[i].position.x,
+                    boids[i].position.y,
+                    maxRadius
+                );
+                let neighbors = [];
+                quadtree.query(range, neighbors);
+                boids[i].flock(neighbors);
+                boids[i].update();
+                boids[i].display();
             }
-          } else {
-            // Still display boids when paused
-            for (let i = 0; i < num; i++) {
-              boids[i].display();
+            
+            if (showQuadtree) {
+                quadtree.display();
             }
-          }
-          
-          if (showQuadtree) {
-            quadtree.display();
-          }
+        }
+
+        function setupSliders() {
+            // Number of boids
+            let numBoidsSlider = document.getElementById('numBoids');
+            let numBoidsValue = document.getElementById('numBoidsValue');
+            numBoidsSlider.addEventListener('input', function() {
+                num = parseInt(this.value);
+                numBoidsValue.textContent = num;
+                
+                // Adjust boids array
+                if (boids.length < num) {
+                    for (let i = boids.length; i < num; i++) {
+                        boids.push(new Boid(random(width), random(height)));
+                    }
+                } else if (boids.length > num) {
+                    boids = boids.slice(0, num);
+                }
+            });
+            
+            // Separation radius
+            let separationRadiusSlider = document.getElementById('separationRadius');
+            let separationRadiusValue = document.getElementById('separationRadiusValue');
+            separationRadiusSlider.addEventListener('input', function() {
+                separationRadius = parseInt(this.value);
+                separationRadiusValue.textContent = separationRadius;
+            });
+            
+            // Alignment radius
+            let alignmentRadiusSlider = document.getElementById('alignmentRadius');
+            let alignmentRadiusValue = document.getElementById('alignmentRadiusValue');
+            alignmentRadiusSlider.addEventListener('input', function() {
+                alignmentRadius = parseInt(this.value);
+                alignmentRadiusValue.textContent = alignmentRadius;
+            });
+            
+            // Cohesion radius
+            let cohesionRadiusSlider = document.getElementById('cohesionRadius');
+            let cohesionRadiusValue = document.getElementById('cohesionRadiusValue');
+            cohesionRadiusSlider.addEventListener('input', function() {
+                cohesionRadius = parseInt(this.value);
+                cohesionRadiusValue.textContent = cohesionRadius;
+            });
+            
+            // Quadtree capacity
+            let quadtreeCapacitySlider = document.getElementById('quadtreeCapacity');
+            let quadtreeCapacityValue = document.getElementById('quadtreeCapacityValue');
+            quadtreeCapacitySlider.addEventListener('input', function() {
+                capacity = parseInt(this.value);
+                quadtreeCapacityValue.textContent = capacity;
+            });
+            
+            // Background opacity
+            let bgOpacitySlider = document.getElementById('bgOpacity');
+            let bgOpacityValue = document.getElementById('bgOpacityValue');
+            bgOpacitySlider.addEventListener('input', function() {
+                bgOpacity = parseInt(this.value);
+                bgOpacityValue.textContent = bgOpacity;
+            });
         }
 
         // ============================================
         // CONTROL FUNCTIONS
         // ============================================
         function resetSimulation() {
-          boids = [];
-          num = parseInt(document.getElementById('boids-slider').value);
-          for (let i = 0; i < num; i++) {
-            boids.push(new Boid(random(width), random(height)));
-          }
-        }
-
-        function togglePause() {
-          isPaused = !isPaused;
+            boids = [];
+            num = parseInt(document.getElementById('numBoids').value);
+            for (let i = 0; i < num; i++) {
+                boids.push(new Boid(random(width), random(height)));
+            }
         }
 
         function toggleQuadtree() {
-          showQuadtree = !showQuadtree;
-        }
-
-        function updatePerception(value) {
-          perceptionRadius = parseInt(value);
-          document.getElementById('perception-value').textContent = value;
-        }
-
-        function updateBoidsCount(value) {
-          num = parseInt(value);
-          document.getElementById('boids-value').textContent = value;
-          // Don't auto-reset, let user click reset button
+            showQuadtree = !showQuadtree;
         }
     </script>
 </body>
