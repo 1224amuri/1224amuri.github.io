@@ -340,14 +340,16 @@
 		}
 
 		.project-images.everyday-large img {
-  		 	max-height: 400px;  /* Or whatever height you want */
+  		 	max-height: 400px;
+  		 	max-width: 500px;  /* Or whatever height you want */
 		}
 
 		.project-images.river-layout {
     		display: grid;
+    		max-height: 400px;
     		grid-template-columns: 1fr 1fr;  /* Two columns */
     		grid-template-rows: auto auto;   /* Two rows */
-    		gap: var(--space-md);
+    		gap:0;
 		}
 
 		.project-images.river-layout img:first-child {
