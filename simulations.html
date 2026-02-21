@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulations — Jagrut Amuri</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sun: #f5c842;
+            --sun-pale: #fdf0b0;
+            --leaf: #4a8c3f;
+            --leaf-light: #7abf6e;
+            --leaf-pale: #c8e6c0;
+            --vine: #2d5a27;
+            --soil: #6b4226;
+            --sky: #c9eaff;
+            --rust: #c0622a;
+            --paper: #faf6ed;
+            --ink: #1e1e1a;
+            --moss-dark: #1e3a1a;
+
+            --mono: 'Space Mono', monospace;
+            --serif: 'Lora', serif;
+            --frag: 'Fragment Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--moss-dark);
+            color: var(--leaf-pale);
+            font-family: var(--frag);
+            min-height: 100vh;
+            overflow-x: hidden;
+            cursor: crosshair;
+        }
+
+        /* Grain texture */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.35;
+        }
+
+        /* ── BACKGROUND ILLUSTRATION ── */
+        .bg-flora {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-flora svg {
+            position: absolute;
+            opacity: 0.07;
+        }
+
+        /* ── PAGE ── */
+        .page {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 6rem;
+        }
+
+        /* ── HEADER ── */
+        header {
+            padding: 3.5rem 0 2.5rem;
+            border-bottom: 1px solid rgba(122,191,110,0.25);
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: end;
+            gap: 2rem;
+            position: relative;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 1.5rem;
+            left: 0;
+            font-family: var(--frag);
+            font-size: 0.7rem;
+            color: var(--leaf-light);
+            text-decoration: none;
+            letter-spacing: 0.12em;
+            text-transform: lowercase;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s, gap 0.2s;
+            opacity: 0.7;
+        }
+
+        .back-link:hover {
+            color: var(--sun);
+            gap: 0.8rem;
+            opacity: 1;
+        }
+
+        .header-title {
+            margin-top: 2rem;
+        }
+
+        .eyebrow {
+            font-family: var(--frag);
+            font-size: 0.68rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--sun);
+            opacity: 0.85;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .eyebrow::before {
+            content: '';
+            display: inline-block;
+            width: 24px;
+            height: 1px;
+            background: var(--sun);
+            opacity: 0.6;
+        }
+
+        h1 {
+            font-family: var(--serif);
+            font-size: clamp(2.8rem, 6vw, 4.5rem);
+            font-weight: 600;
+            font-style: italic;
+            color: var(--sun-pale);
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+        }
+
+        h1 em {
+            font-style: normal;
+            color: var(--leaf-light);
+        }
+
+        .header-desc {
+            max-width: 420px;
+            text-align: right;
+            padding-bottom: 0.4rem;
+        }
+
+        .header-desc p {
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 1rem;
+            line-height: 1.65;
+            color: var(--leaf-pale);
+            opacity: 0.75;
+        }
+
+        .header-meta {
+            font-family: var(--frag);
+            font-size: 0.65rem;
+            color: var(--leaf-light);
+            opacity: 0.5;
+            margin-top: 0.75rem;
+            letter-spacing: 0.08em;
+        }
+
+        /* ── MANIFESTO STRIP ── */
+        .manifesto {
+            border: 1px solid rgba(122,191,110,0.2);
+            border-left: 3px solid var(--sun);
+            background: rgba(74,140,63,0.08);
+            padding: 1.2rem 1.6rem;
+            margin: 2.5rem 0 3.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .manifesto-icon {
+            font-size: 1.6rem;
+            flex-shrink: 0;
+        }
+
+        .manifesto p {
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 1.05rem;
+            color: var(--sun-pale);
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .manifesto p span {
+            color: var(--leaf-light);
+            font-style: normal;
+        }
+
+        /* ── SECTION MARKER ── */
+        .section-marker {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 4rem 0 2.5rem;
+        }
+
+        .section-marker span {
+            font-family: var(--frag);
+            font-size: 0.68rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--leaf-light);
+            opacity: 0.6;
+            white-space: nowrap;
+        }
+
+        .section-marker::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(122,191,110,0.3), transparent);
+        }
+
+        /* ── GALLERY GRID ── */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* ── SIM CARD ── */
+        .sim-card {
+            background: rgba(30,58,26,0.7);
+            border: 1px solid rgba(122,191,110,0.18);
+            border-radius: 2px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.35s ease, border-color 0.3s ease, box-shadow 0.35s ease;
+            position: relative;
+            opacity: 0;
+            animation: riseUp 0.6s ease forwards;
+        }
+
+        .sim-card:nth-child(1) { animation-delay: 0.1s; }
+        .sim-card:nth-child(2) { animation-delay: 0.2s; }
+        .sim-card:nth-child(3) { animation-delay: 0.3s; }
+        .sim-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes riseUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .sim-card:hover {
+            transform: translateY(-6px) rotate(0.2deg);
+            border-color: rgba(245,200,66,0.4);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(245,200,66,0.1);
+        }
+
+        /* Top accent bar */
+        .sim-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--leaf), var(--sun), var(--leaf-light));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .sim-card:hover::before { transform: scaleX(1); }
+
+        /* ── THUMBNAIL ── */
+        .sim-thumbnail {
+            width: 100%;
+            aspect-ratio: 16/9;
+            overflow: hidden;
+            position: relative;
+            background: var(--moss-dark);
+        }
+
+        .sim-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease, filter 0.4s ease;
+            filter: saturate(0.85) brightness(0.9);
+        }
+
+        .sim-card:hover .sim-thumbnail img {
+            transform: scale(1.04);
+            filter: saturate(1.1) brightness(1.0);
+        }
+
+        /* Placeholder thumbnail for cards without images */
+        .sim-thumbnail-placeholder {
+            width: 100%;
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1e3a1a, #0f2210);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sim-thumbnail-placeholder svg {
+            opacity: 0.25;
+            width: 60%;
+            height: 60%;
+        }
+
+        .placeholder-label {
+            position: absolute;
+            bottom: 0.75rem;
+            right: 0.75rem;
+            font-family: var(--frag);
+            font-size: 0.6rem;
+            letter-spacing: 0.12em;
+            color: var(--leaf-light);
+            opacity: 0.5;
+            text-transform: uppercase;
+        }
+
+        /* Status badge */
+        .sim-status {
+            position: absolute;
+            top: 0.7rem;
+            right: 0.7rem;
+            font-family: var(--frag);
+            font-size: 0.6rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.2rem 0.5rem;
+            border-radius: 1px;
+            z-index: 2;
+        }
+
+        .sim-status.live {
+            background: rgba(74,140,63,0.85);
+            color: var(--sun-pale);
+            border: 1px solid var(--leaf-light);
+        }
+
+        .sim-status.wip {
+            background: rgba(192,98,42,0.7);
+            color: #ffd9bb;
+            border: 1px solid var(--rust);
+        }
+
+        .sim-status.planned {
+            background: rgba(30,58,26,0.9);
+            color: var(--leaf-light);
+            border: 1px solid rgba(122,191,110,0.3);
+        }
+
+        /* ── CARD BODY ── */
+        .sim-body {
+            padding: 1.4rem 1.5rem 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .sim-title {
+            font-family: var(--serif);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--sun-pale);
+            line-height: 1.2;
+        }
+
+        .sim-desc {
+            font-family: var(--serif);
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: var(--leaf-pale);
+            opacity: 0.8;
+            flex: 1;
+        }
+
+        /* ── TAGS ── */
+        .sim-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.25rem;
+        }
+
+        .tag {
+            font-family: var(--frag);
+            font-size: 0.62rem;
+            padding: 0.2rem 0.55rem;
+            border: 1px solid rgba(122,191,110,0.3);
+            color: var(--leaf-light);
+            letter-spacing: 0.08em;
+            text-transform: lowercase;
+            border-radius: 1px;
+            background: rgba(74,140,63,0.08);
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .sim-card:hover .tag {
+            background: rgba(74,140,63,0.15);
+            border-color: rgba(122,191,110,0.5);
+        }
+
+        /* ── CARD FOOTER ── */
+        .sim-footer {
+            padding: 0.9rem 1.5rem 1.2rem;
+            border-top: 1px solid rgba(122,191,110,0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .sim-link {
+            font-family: var(--frag);
+            font-size: 0.68rem;
+            letter-spacing: 0.08em;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem 0.9rem;
+            border-radius: 1px;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .sim-link.primary {
+            background: var(--leaf);
+            color: var(--sun-pale);
+            border: 1px solid var(--leaf-light);
+        }
+
+        .sim-link.primary:hover {
+            background: var(--leaf-light);
+            color: var(--moss-dark);
+            border-color: var(--leaf-light);
+        }
+
+        .sim-link.secondary {
+            background: transparent;
+            color: var(--leaf-light);
+            border: 1px solid rgba(122,191,110,0.25);
+        }
+
+        .sim-link.secondary:hover {
+            background: rgba(122,191,110,0.1);
+            border-color: rgba(122,191,110,0.5);
+            color: var(--sun-pale);
+        }
+
+        .sim-link.disabled {
+            background: transparent;
+            color: rgba(122,191,110,0.3);
+            border: 1px solid rgba(122,191,110,0.1);
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .link-icon {
+            font-size: 0.8rem;
+            line-height: 1;
+        }
+
+        /* ── COMING SOON CARD ── */
+        .sim-card.coming-soon {
+            opacity: 0.5;
+            border-style: dashed;
+        }
+
+        .sim-card.coming-soon:hover {
+            opacity: 0.7;
+            transform: none;
+        }
+
+        /* ── FOOTER ── */
+        .page-footer {
+            border-top: 1px solid rgba(122,191,110,0.15);
+            margin-top: 5rem;
+            padding-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-note {
+            font-family: var(--serif);
+            font-style: italic;
+            font-size: 0.9rem;
+            color: var(--leaf-light);
+            opacity: 0.6;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            font-family: var(--frag);
+            font-size: 0.68rem;
+            color: var(--leaf-light);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            opacity: 0.5;
+            transition: opacity 0.2s, color 0.2s;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+            color: var(--sun);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 720px) {
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                grid-template-columns: 1fr;
+            }
+
+            .header-desc {
+                text-align: left;
+                max-width: 100%;
+            }
+        }
+
+        /* ── FLOATING PARTICLES ── */
+        .particle {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: var(--sun);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Background botanical illustration (SVG) -->
+<div class="bg-flora">
+    <svg style="bottom:-80px; right:-60px; width: 500px; height: 500px;" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M200 380 C200 380 80 300 80 180 C80 80 140 20 200 20" stroke="#7abf6e" stroke-width="2"/>
+        <path d="M200 380 C200 380 320 300 320 180 C320 80 260 20 200 20" stroke="#7abf6e" stroke-width="2"/>
+        <ellipse cx="120" cy="160" rx="55" ry="28" transform="rotate(-35 120 160)" stroke="#7abf6e" stroke-width="1.5"/>
+        <ellipse cx="280" cy="140" rx="55" ry="28" transform="rotate(35 280 140)" stroke="#7abf6e" stroke-width="1.5"/>
+        <ellipse cx="100" cy="240" rx="45" ry="22" transform="rotate(-20 100 240)" stroke="#4a8c3f" stroke-width="1.5"/>
+        <ellipse cx="310" cy="220" rx="45" ry="22" transform="rotate(20 310 220)" stroke="#4a8c3f" stroke-width="1.5"/>
+        <circle cx="200" cy="20" r="14" stroke="#f5c842" stroke-width="2"/>
+        <path d="M200 6 L200 0 M200 34 L200 40 M186 20 L180 20 M214 20 L220 20" stroke="#f5c842" stroke-width="1.5"/>
+    </svg>
+    <svg style="top:-40px; left:-30px; width: 350px; height: 350px;" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M150 280 C60 230 30 140 60 60" stroke="#4a8c3f" stroke-width="2"/>
+        <ellipse cx="60" cy="110" rx="40" ry="20" transform="rotate(-50 60 110)" stroke="#4a8c3f" stroke-width="1.5"/>
+        <ellipse cx="90" cy="180" rx="40" ry="20" transform="rotate(-30 90 180)" stroke="#7abf6e" stroke-width="1.5"/>
+        <path d="M150 280 L155 240 M155 240 L180 220 M155 240 L135 215" stroke="#4a8c3f" stroke-width="1.5"/>
+    </svg>
+</div>
+
+<div class="page">
+
+    <!-- ── HEADER ── -->
+    <header>
+        <a href="garden.html" class="back-link">← garden</a>
+
+        <div class="header-title">
+            <div class="eyebrow">simulations & code</div>
+            <h1>Living <em>Systems</em><br>in Code</h1>
+        </div>
+
+        <div class="header-desc">
+            <p>Simple rules. Emergent complexity. The same question, asked in p5.js.</p>
+            <div class="header-meta">updated regularly · growing collection</div>
+        </div>
+    </header>
+
+    <!-- ── MANIFESTO ── -->
+    <div class="manifesto">
+        <div class="manifesto-icon">🌿</div>
+        <p>
+            Technology as a way of <span>understanding nature</span>, not replacing it. Each simulation here is a question — what happens when you reduce life to its simplest rules, and let it run?
+        </p>
+    </div>
+
+    <!-- ── SIMULATIONS GALLERY ── -->
+    <div class="section-marker"><span>the simulations</span></div>
+
+    <div class="gallery">
+
+        <!-- ── CARD 1: BOIDS ── -->
+        <div class="sim-card">
+            <div class="sim-thumbnail">
+                <span class="sim-status live">● live</span>
+                <img src="images/boids_thumb.png" alt="Boids flocking simulation screenshot"
+                     onerror="this.parentElement.innerHTML='<div class=\'sim-thumbnail-placeholder\'><svg viewBox=\'0 0 200 200\' fill=\'none\'><circle cx=\'100\' cy=\'100\' r=\'60\' stroke=\'#7abf6e\' stroke-width=\'1\'/><circle cx=\'100\' cy=\'100\' r=\'40\' stroke=\'#4a8c3f\' stroke-width=\'1\'/><circle cx=\'100\' cy=\'100\' r=\'20\' stroke=\'#7abf6e\' stroke-width=\'1\'/><line x1=\'60\' y1=\'40\' x2=\'140\' y2=\'160\' stroke=\'#7abf6e\' stroke-width=\'0.8\'/><line x1=\'140\' y1=\'40\' x2=\'60\' y2=\'160\' stroke=\'#7abf6e\' stroke-width=\'0.8\'/></svg><span class=\'placeholder-label\'>boids</span></div>'">
+            </div>
+            <div class="sim-body">
+                <div class="sim-title">Boids — Flocking Behaviour</div>
+                <div class="sim-desc">
+                    900 agents. Three rules: separation, alignment, cohesion. Watch murmurations emerge from nothing but local awareness. No central control — only neighbourhood logic.
+                </div>
+                <div class="sim-tags">
+                    <span class="tag">emergence</span>
+                    <span class="tag">flocking</span>
+                    <span class="tag">self-organisation</span>
+                    <span class="tag">quadtree</span>
+                    <span class="tag">agent-based</span>
+                </div>
+            </div>
+            <div class="sim-footer">
+                <a href="boids.html" class="sim-link primary">
+                    <span class="link-icon">▶</span> run simulation
+                </a>
+                <a href="https://editor.p5js.org/" class="sim-link secondary" target="_blank" rel="noopener">
+                    <span class="link-icon">⌨</span> p5 editor
+                </a>
+            </div>
+        </div>
+
+        <!-- ── CARD 2: SLIME MOLD (WIP) ── -->
+        <div class="sim-card">
+            <div class="sim-thumbnail-placeholder">
+                <span class="sim-status wip">⧖ in progress</span>
+                <svg viewBox="0 0 200 200" fill="none">
+                    <path d="M100 100 Q130 70 160 100 Q130 130 100 100Z" stroke="#7abf6e" stroke-width="1"/>
+                    <path d="M100 100 Q70 70 40 100 Q70 130 100 100Z" stroke="#4a8c3f" stroke-width="1"/>
+                    <path d="M100 100 Q100 60 100 30" stroke="#7abf6e" stroke-width="1" stroke-dasharray="3 3"/>
+                    <path d="M100 100 Q100 140 100 170" stroke="#4a8c3f" stroke-width="1" stroke-dasharray="3 3"/>
+                    <circle cx="100" cy="100" r="8" stroke="#f5c842" stroke-width="1"/>
+                    <circle cx="160" cy="100" r="4" fill="#4a8c3f" opacity="0.5"/>
+                    <circle cx="40" cy="100" r="4" fill="#4a8c3f" opacity="0.5"/>
+                    <circle cx="100" cy="30" r="4" fill="#4a8c3f" opacity="0.5"/>
+                    <circle cx="100" cy="170" r="4" fill="#4a8c3f" opacity="0.5"/>
+                </svg>
+                <span class="placeholder-label">slime mold</span>
+            </div>
+            <div class="sim-body">
+                <div class="sim-title">Physarum — Slime Mold Networks</div>
+                <div class="sim-desc">
+                    A single-celled organism that solves the travelling salesman problem. Agents leave pheromone trails, trails attract agents, networks self-optimise. Nature's algorithm for efficient transport.
+                </div>
+                <div class="sim-tags">
+                    <span class="tag">physarum</span>
+                    <span class="tag">network formation</span>
+                    <span class="tag">pheromones</span>
+                    <span class="tag">emergence</span>
+                    <span class="tag">optimisation</span>
+                </div>
+            </div>
+            <div class="sim-footer">
+                <a href="#" class="sim-link primary disabled">
+                    <span class="link-icon">◌</span> coming soon
+                </a>
+                <a href="https://editor.p5js.org/" class="sim-link secondary" target="_blank" rel="noopener">
+                    <span class="link-icon">⌨</span> p5 editor
+                </a>
+            </div>
+        </div>
+
+        <!-- ── CARD 3: REACTION DIFFUSION (planned) ── -->
+        <div class="sim-card">
+            <div class="sim-thumbnail-placeholder">
+                <span class="sim-status planned">○ planned</span>
+                <svg viewBox="0 0 200 200" fill="none">
+                    <circle cx="100" cy="100" r="70" stroke="#4a8c3f" stroke-width="0.8" stroke-dasharray="4 3"/>
+                    <circle cx="100" cy="100" r="50" stroke="#7abf6e" stroke-width="0.8" stroke-dasharray="4 3"/>
+                    <circle cx="100" cy="100" r="30" stroke="#4a8c3f" stroke-width="0.8" stroke-dasharray="4 3"/>
+                    <circle cx="100" cy="100" r="12" stroke="#f5c842" stroke-width="1"/>
+                    <path d="M55 55 Q100 30 145 55" stroke="#7abf6e" stroke-width="0.8" opacity="0.5"/>
+                    <path d="M55 145 Q100 170 145 145" stroke="#7abf6e" stroke-width="0.8" opacity="0.5"/>
+                </svg>
+                <span class="placeholder-label">gray-scott</span>
+            </div>
+            <div class="sim-body">
+                <div class="sim-title">Gray-Scott — Reaction Diffusion</div>
+                <div class="sim-desc">
+                    The chemistry of leopard spots and zebra stripes. Two virtual chemicals chase and consume each other across a grid — producing coral, labyrinthine, and sponge-like patterns from pure math.
+                </div>
+                <div class="sim-tags">
+                    <span class="tag">turing patterns</span>
+                    <span class="tag">morphogenesis</span>
+                    <span class="tag">chemistry</span>
+                    <span class="tag">pattern formation</span>
+                </div>
+            </div>
+            <div class="sim-footer">
+                <a href="#" class="sim-link primary disabled">
+                    <span class="link-icon">◌</span> coming soon
+                </a>
+                <a href="https://editor.p5js.org/" class="sim-link secondary" target="_blank" rel="noopener">
+                    <span class="link-icon">⌨</span> p5 editor
+                </a>
+            </div>
+        </div>
+
+        <!-- ── CARD 4: L-SYSTEMS (planned) ── -->
+        <div class="sim-card">
+            <div class="sim-thumbnail-placeholder">
+                <span class="sim-status planned">○ planned</span>
+                <svg viewBox="0 0 200 200" fill="none">
+                    <line x1="100" y1="180" x2="100" y2="130" stroke="#4a8c3f" stroke-width="2"/>
+                    <line x1="100" y1="130" x2="70" y2="100" stroke="#7abf6e" stroke-width="1.5"/>
+                    <line x1="100" y1="130" x2="130" y2="100" stroke="#7abf6e" stroke-width="1.5"/>
+                    <line x1="70" y1="100" x2="50" y2="75" stroke="#4a8c3f" stroke-width="1"/>
+                    <line x1="70" y1="100" x2="85" y2="70" stroke="#4a8c3f" stroke-width="1"/>
+                    <line x1="130" y1="100" x2="115" y2="70" stroke="#4a8c3f" stroke-width="1"/>
+                    <line x1="130" y1="100" x2="150" y2="75" stroke="#4a8c3f" stroke-width="1"/>
+                    <circle cx="50" cy="70" r="5" stroke="#f5c842" stroke-width="1"/>
+                    <circle cx="85" cy="65" r="5" stroke="#f5c842" stroke-width="1"/>
+                    <circle cx="115" cy="65" r="5" stroke="#f5c842" stroke-width="1"/>
+                    <circle cx="150" cy="70" r="5" stroke="#f5c842" stroke-width="1"/>
+                </svg>
+                <span class="placeholder-label">L-systems</span>
+            </div>
+            <div class="sim-body">
+                <div class="sim-title">L-Systems — Generative Plants</div>
+                <div class="sim-desc">
+                    Aristid Lindenmayer's grammar for growing things. A string rewriting system that generates the branching geometry of ferns, trees, and coastlines from a single axiom and a handful of rules.
+                </div>
+                <div class="sim-tags">
+                    <span class="tag">fractals</span>
+                    <span class="tag">generative</span>
+                    <span class="tag">plant growth</span>
+                    <span class="tag">recursion</span>
+                    <span class="tag">botany</span>
+                </div>
+            </div>
+            <div class="sim-footer">
+                <a href="#" class="sim-link primary disabled">
+                    <span class="link-icon">◌</span> coming soon
+                </a>
+                <a href="https://editor.p5js.org/" class="sim-link secondary" target="_blank" rel="noopener">
+                    <span class="link-icon">⌨</span> p5 editor
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ── IDEAS IN THE SOIL ── -->
+    <div class="section-marker"><span>seeds — ideas not yet coded</span></div>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+        <div style="padding: 1rem 1.2rem; border: 1px dashed rgba(122,191,110,0.2); background: rgba(30,58,26,0.3);">
+            <div style="font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sun); opacity:0.6; margin-bottom:0.4rem;">seed</div>
+            <div style="font-family: var(--serif); font-size: 0.95rem; color: var(--leaf-pale); line-height: 1.5;">Ant colony optimisation & pheromone pathfinding</div>
+        </div>
+        <div style="padding: 1rem 1.2rem; border: 1px dashed rgba(122,191,110,0.2); background: rgba(30,58,26,0.3);">
+            <div style="font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sun); opacity:0.6; margin-bottom:0.4rem;">seed</div>
+            <div style="font-family: var(--serif); font-size: 0.95rem; color: var(--leaf-pale); line-height: 1.5;">Cellular automata — Conway's Game of Life variants</div>
+        </div>
+        <div style="padding: 1rem 1.2rem; border: 1px dashed rgba(122,191,110,0.2); background: rgba(30,58,26,0.3);">
+            <div style="font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sun); opacity:0.6; margin-bottom:0.4rem;">seed</div>
+            <div style="font-family: var(--serif); font-size: 0.95rem; color: var(--leaf-pale); line-height: 1.5;">Mycelium network growth simulation</div>
+        </div>
+        <div style="padding: 1rem 1.2rem; border: 1px dashed rgba(122,191,110,0.2); background: rgba(30,58,26,0.3);">
+            <div style="font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sun); opacity:0.6; margin-bottom:0.4rem;">seed</div>
+            <div style="font-family: var(--serif); font-size: 0.95rem; color: var(--leaf-pale); line-height: 1.5;">Fluid dynamics — water flowing around obstacles</div>
+        </div>
+    </div>
+
+    <!-- ── FOOTER ── -->
+    <div class="page-footer">
+        <div class="footer-note">every simulation asks the same thing — how does complexity arise from simplicity?</div>
+        <div class="footer-links">
+            <a href="garden.html">← garden</a>
+            <a href="index.html">portfolio</a>
+            <a href="https://p5js.org" target="_blank" rel="noopener">p5.js</a>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Floating particle on click
+    document.addEventListener('click', (e) => {
+        const symbols = ['✦', '✿', '⬡', '◈', '⌬'];
+        const el = document.createElement('div');
+        el.style.cssText = `
+            position: fixed;
+            left: ${e.clientX}px;
+            top: ${e.clientY}px;
+            font-size: 0.9rem;
+            color: #f5c842;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 1;
+            transition: transform 1s ease, opacity 1s ease;
+            transform: translate(-50%, -50%);
+        `;
+        el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        document.body.appendChild(el);
+        requestAnimationFrame(() => {
+            el.style.transform = `translate(-50%, -${50 + 60}px)`;
+            el.style.opacity = '0';
+        });
+        setTimeout(() => el.remove(), 1100);
+    });
+
+    // Subtle parallax on cards
+    document.querySelectorAll('.sim-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width - 0.5) * 6;
+            const y = ((e.clientY - rect.top)  / rect.height - 0.5) * 6;
+            card.style.transform = `translateY(-6px) rotate(0.2deg) perspective(600px) rotateX(${-y}deg) rotateY(${x}deg)`;
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = '';
+        });
+    });
+</script>
+</body>
+</html>
