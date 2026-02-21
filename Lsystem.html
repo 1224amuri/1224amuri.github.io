@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>L-System Explorer</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;1,300&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+<style>
+:root {
+  --bg: #0a0c0e;
+  --panel: #0f1214;
+  --border: #1e2428;
+  --border-bright: #2e3a42;
+  --text: #c8cdd2;
+  --text-dim: #566370;
+  --text-bright: #e8edf2;
+  --accent: #4a9eff;
+  --accent-dim: #1a3a5c;
+  --green: #4ade80;
+  --green-dim: #1a3a28;
+  --amber: #fbbf24;
+  --amber-dim: #3a2a0a;
+  --red: #f87171;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+#sidebar {
+  width: 300px;
+  min-width: 300px;
+  background: var(--panel);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+#sidebar::-webkit-scrollbar { width: 3px; }
+#sidebar::-webkit-scrollbar-track { background: transparent; }
+#sidebar::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
+.sidebar-header {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-header h1 {
+  font-family: 'IM Fell English', serif;
+  font-size: 22px;
+  color: var(--text-bright);
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+.sidebar-header .sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-top: 5px;
+}
+.section {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.section-label {
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+.presets {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.preset-btn {
+  background: transparent;
+  border: 1px solid var(--border-bright);
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  padding: 7px 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+  letter-spacing: 0.5px;
+}
+.preset-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+.preset-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+.control-row { margin-bottom: 14px; }
+.control-row:last-child { margin-bottom: 0; }
+.control-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 5px;
+}
+.control-label span:first-child { font-size: 10px; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; }
+.control-label .val { font-size: 11px; color: var(--text-bright); font-style: italic; }
+input[type=range] {
+  width: 100%;
+  height: 2px;
+  background: var(--border-bright);
+  border: none;
+  outline: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px; height: 12px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.3); }
+.field-group { margin-bottom: 10px; }
+.field-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 4px; }
+input[type=text], textarea {
+  width: 100%;
+  background: #080a0c;
+  border: 1px solid var(--border);
+  color: var(--text-bright);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  padding: 7px 9px;
+  outline: none;
+  transition: border-color 0.15s;
+  resize: none;
+}
+input[type=text]:focus, textarea:focus { border-color: var(--accent); }
+.mutation-section { padding: 14px 20px; border-bottom: 1px solid var(--border); }
+.mutation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
+.mut-btn {
+  background: transparent;
+  border: 1px solid var(--border-bright);
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  padding: 7px 6px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: all 0.15s;
+  text-align: center;
+}
+.mut-btn:hover { border-color: var(--amber); color: var(--amber); background: var(--amber-dim); }
+.mut-btn.danger:hover { border-color: var(--red); color: var(--red); background: #3a0a0a; }
+.mut-btn.good:hover { border-color: var(--green); color: var(--green); background: var(--green-dim); }
+.mutation-strength { margin-top: 10px; }
+.history-section { padding: 14px 20px; border-bottom: 1px solid var(--border); }
+.history-list { display: flex; flex-direction: column; gap: 4px; max-height: 120px; overflow-y: auto; }
+.history-item {
+  font-size: 9px; color: var(--text-dim); padding: 4px 6px;
+  border: 1px solid transparent; cursor: pointer; transition: all 0.1s;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.history-item:hover { border-color: var(--border-bright); color: var(--text); }
+.info-bar {
+  padding: 10px 20px; background: #080a0c; border-top: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.info-row { display: flex; justify-content: space-between; font-size: 9px; }
+.info-row .key { color: var(--text-dim); }
+.info-row .val { color: var(--text-bright); }
+.apply-btn {
+  display: block; width: calc(100% - 40px); margin: 12px 20px; padding: 10px;
+  background: transparent; border: 1px solid var(--accent); color: var(--accent);
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px;
+  text-transform: uppercase; cursor: pointer; transition: all 0.15s;
+}
+.apply-btn:hover { background: var(--accent); color: #000; }
+#canvas-container { flex: 1; position: relative; background: var(--bg); }
+#canvas-container canvas { display: block; }
+#string-preview {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: rgba(10,12,14,0.92); border-top: 1px solid var(--border);
+  padding: 8px 16px; font-size: 9px; color: var(--text-dim);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  letter-spacing: 0.5px; pointer-events: none;
+}
+#string-preview .prefix { color: var(--accent); margin-right: 8px; }
+#corner-label {
+  position: absolute; top: 14px; right: 16px; font-size: 9px;
+  color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<div id="sidebar">
+  <div class="sidebar-header">
+    <h1>L-System<br>Explorer</h1>
+    <div class="sub">Lindenmayer · 1968</div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Presets</div>
+    <div class="presets">
+      <button class="preset-btn active" data-preset="fern">Barnsley Fern</button>
+      <button class="preset-btn" data-preset="tree">Binary Tree</button>
+      <button class="preset-btn" data-preset="koch">Koch Curve</button>
+      <button class="preset-btn" data-preset="dragon">Dragon</button>
+      <button class="preset-btn" data-preset="sierpinski">Sierpiński</button>
+      <button class="preset-btn" data-preset="plant">Plant</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Grammar</div>
+    <div class="field-group">
+      <div class="field-label">Axiom</div>
+      <input type="text" id="axiom" value="X" />
+    </div>
+    <div class="field-group">
+      <div class="field-label">Rules — one per line, A=B</div>
+      <textarea id="rules" rows="4">X=F+[[X]-X]-F[-FX]+X
+F=FF</textarea>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Parameters</div>
+    <div class="control-row">
+      <div class="control-label"><span>Generations</span><span class="val" id="gen-val">5</span></div>
+      <input type="range" id="gen" min="1" max="8" value="5" />
+    </div>
+    <div class="control-row">
+      <div class="control-label"><span>Angle δ</span><span class="val" id="angle-val">25°</span></div>
+      <input type="range" id="angle" min="5" max="90" value="25" />
+    </div>
+    <div class="control-row">
+      <div class="control-label"><span>Line Length</span><span class="val" id="len-val">4</span></div>
+      <input type="range" id="linelen" min="1" max="20" value="4" />
+    </div>
+    <div class="control-row">
+      <div class="control-label"><span>Line Taper</span><span class="val" id="taper-val">0.75</span></div>
+      <input type="range" id="taper" min="0.3" max="1.0" step="0.01" value="0.75" />
+    </div>
+  </div>
+
+  <button class="apply-btn" id="apply-btn">↳ Apply &amp; Grow</button>
+
+  <div class="mutation-section">
+    <div class="section-label">Mutation</div>
+    <div class="mutation-strength">
+      <div class="control-label">
+        <span style="font-size:9px;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase">Strength</span>
+        <span class="val" id="mut-val">2</span>
+      </div>
+      <input type="range" id="mut-strength" min="1" max="5" value="2" />
+    </div>
+    <div class="mutation-grid">
+      <button class="mut-btn good" id="mut-insert">+ Insert symbol</button>
+      <button class="mut-btn danger" id="mut-delete">− Delete symbol</button>
+      <button class="mut-btn" id="mut-swap">⇄ Swap symbols</button>
+      <button class="mut-btn" id="mut-angle">∠ Nudge angle</button>
+      <button class="mut-btn" id="mut-random" style="grid-column:1/-1">⚡ Random mutation</button>
+    </div>
+  </div>
+
+  <div class="history-section">
+    <div class="section-label">Mutation history</div>
+    <div class="history-list" id="history-list">
+      <div class="history-item" style="color:var(--text-dim);font-style:italic">— no mutations yet —</div>
+    </div>
+  </div>
+
+  <div class="info-bar">
+    <div class="info-row"><span class="key">string length</span><span class="val" id="info-strlen">—</span></div>
+    <div class="info-row"><span class="key">draw calls</span><span class="val" id="info-draws">—</span></div>
+    <div class="info-row"><span class="key">stack depth</span><span class="val" id="info-depth">—</span></div>
+  </div>
+</div>
+
+<div id="canvas-container">
+  <div id="corner-label">Generation <span id="gen-display">5</span></div>
+  <div id="string-preview"><span class="prefix">str →</span><span id="preview-text"></span></div>
+</div>
+
+<script>
+// ─── PRESETS ───────────────────────────────────────────────────────────────
+const PRESETS = {
+  fern:      { axiom: 'X',       rules: 'X=F+[[X]-X]-F[-FX]+X\nF=FF',   angle: 25,  gen: 5, len: 4,  startAngle: -90, startX: 0.5,  startY: 0.95 },
+  tree:      { axiom: '0',       rules: '0=1[0]0\n1=11',                  angle: 45,  gen: 7, len: 5,  startAngle: -90, startX: 0.5,  startY: 0.92 },
+  koch:      { axiom: 'F--F--F', rules: 'F=F+F--F+F',                    angle: 60,  gen: 4, len: 5,  startAngle: 0,   startX: 0.1,  startY: 0.6  },
+  dragon:    { axiom: 'FX',      rules: 'X=X+YF+\nY=-FX-Y',              angle: 90,  gen: 10, len: 7, startAngle: 0,   startX: 0.45, startY: 0.5  },
+  sierpinski:{ axiom: 'F-G-G',   rules: 'F=F-G+F+G-F\nG=GG',            angle: 120, gen: 6, len: 5,  startAngle: 0,   startX: 0.1,  startY: 0.75 },
+  plant:     { axiom: 'F',       rules: 'F=F[+F]F[-F][F]',               angle: 20,  gen: 5, len: 6,  startAngle: -90, startX: 0.5,  startY: 0.95 }
+};
+
+// ─── L-SYSTEM ENGINE ───────────────────────────────────────────────────────
+function parseRules(text) {
+  const rules = {};
+  text.split('\n').forEach(line => {
+    const eq = line.indexOf('=');
+    if (eq > 0) rules[line.slice(0, eq).trim()] = line.slice(eq + 1).trim();
+  });
+  return rules;
+}
+
+function generateString(axiom, rules, gens) {
+  let str = axiom;
+  for (let i = 0; i < gens; i++) {
+    let next = '';
+    for (const ch of str) next += rules[ch] || ch;
+    str = next;
+    if (str.length > 300000) break;
+  }
+  return str;
+}
+
+function analyzeString(str) {
+  let draws = 0, maxDepth = 0, depth = 0;
+  for (const ch of str) {
+    if (ch === 'F' || ch === 'G') draws++;
+    if (ch === '[') { depth++; if (depth > maxDepth) maxDepth = depth; }
+    if (ch === ']') depth = Math.max(0, depth - 1);
+  }
+  return { draws, maxDepth };
+}
+
+// ─── MUTATION ENGINE ───────────────────────────────────────────────────────
+const ALL_SYMS = ['F', 'G', '+', '-', '[', ']'];
+
+function mutInsert(s, n) {
+  let r = s;
+  for (let i = 0; i < n; i++) {
+    const pos = Math.floor(Math.random() * r.length);
+    r = r.slice(0, pos) + ALL_SYMS[Math.floor(Math.random() * ALL_SYMS.length)] + r.slice(pos);
+  }
+  return r;
+}
+
+function mutDelete(s, n) {
+  let r = s;
+  for (let i = 0; i < n; i++) {
+    if (r.length <= 1) break;
+    const pos = Math.floor(Math.random() * r.length);
+    r = r.slice(0, pos) + r.slice(pos + 1);
+  }
+  return r;
+}
+
+function mutSwap(s, n) {
+  const arr = s.split('');
+  for (let i = 0; i < n; i++) {
+    if (arr.length < 2) break;
+    const a = Math.floor(Math.random() * arr.length);
+    let b = a;
+    while (b === a) b = Math.floor(Math.random() * arr.length);
+    [arr[a], arr[b]] = [arr[b], arr[a]];
+  }
+  return arr.join('');
+}
+
+function applyMutation(type) {
+  const lines = document.getElementById('rules').value.split('\n').filter(l => l.includes('='));
+  if (!lines.length) return;
+  const strength = parseInt(document.getElementById('mut-strength').value);
+  const idx = Math.floor(Math.random() * lines.length);
+  const eq = lines[idx].indexOf('=');
+  const lhs = lines[idx].slice(0, eq);
+  const rhs = lines[idx].slice(eq + 1);
+  let newRhs;
+  if (type === 'insert') newRhs = mutInsert(rhs, strength);
+  else if (type === 'delete') newRhs = mutDelete(rhs, strength);
+  else if (type === 'swap') newRhs = mutSwap(rhs, strength);
+  else {
+    const ops = [mutInsert, mutDelete, mutSwap];
+    newRhs = ops[Math.floor(Math.random() * ops.length)](rhs, strength);
+  }
+  lines[idx] = `${lhs}=${newRhs}`;
+  document.getElementById('rules').value = lines.join('\n');
+  addHistory(`${type}: ${lhs}=${rhs.slice(0,12)}${rhs.length>12?'…':''} → ${lhs}=${newRhs.slice(0,12)}${newRhs.length>12?'…':''}`);
+  rebuildAndDraw();
+}
+
+function mutateAngle() {
+  const strength = parseInt(document.getElementById('mut-strength').value);
+  const slider = document.getElementById('angle');
+  const delta = (Math.random() > 0.5 ? 1 : -1) * strength * 2;
+  const newVal = Math.min(90, Math.max(5, parseInt(slider.value) + delta));
+  slider.value = newVal;
+  document.getElementById('angle-val').textContent = newVal + '°';
+  addHistory(`angle nudge → ${newVal}°`);
+  rebuildAndDraw();
+}
+
+// ─── HISTORY ───────────────────────────────────────────────────────────────
+const history = [];
+
+function addHistory(desc) {
+  history.unshift({
+    desc,
+    axiom: document.getElementById('axiom').value,
+    rules: document.getElementById('rules').value,
+    angle: document.getElementById('angle').value,
+    gen:   document.getElementById('gen').value,
+    len:   document.getElementById('linelen').value,
+    taper: document.getElementById('taper').value
+  });
+  if (history.length > 20) history.pop();
+  renderHistory();
+}
+
+function renderHistory() {
+  const list = document.getElementById('history-list');
+  if (!history.length) {
+    list.innerHTML = '<div class="history-item" style="color:var(--text-dim);font-style:italic">— no mutations yet —</div>';
+    return;
+  }
+  list.innerHTML = history.map((h, i) =>
+    `<div class="history-item" data-idx="${i}" title="${h.desc}">${i === 0 ? '● ' : '○ '}${h.desc}</div>`
+  ).join('');
+  list.querySelectorAll('.history-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const h = history[+el.dataset.idx];
+      document.getElementById('axiom').value   = h.axiom;
+      document.getElementById('rules').value   = h.rules;
+      document.getElementById('angle').value   = h.angle;
+      document.getElementById('angle-val').textContent = h.angle + '°';
+      document.getElementById('gen').value     = h.gen;
+      document.getElementById('gen-val').textContent   = h.gen;
+      document.getElementById('linelen').value = h.len;
+      document.getElementById('len-val').textContent   = h.len;
+      document.getElementById('taper').value   = h.taper;
+      document.getElementById('taper-val').textContent = parseFloat(h.taper).toFixed(2);
+      rebuildAndDraw();
+    });
+  });
+}
+
+// ─── p5 SKETCH ─────────────────────────────────────────────────────────────
+let currentPreset = PRESETS.fern;
+
+new p5(function(p) {
+
+  function getParams() {
+    return {
+      axiom:    document.getElementById('axiom').value,
+      rulesText:document.getElementById('rules').value,
+      gen:      parseInt(document.getElementById('gen').value),
+      angleDeg: parseFloat(document.getElementById('angle').value),
+      linelen:  parseFloat(document.getElementById('linelen').value),
+      taper:    parseFloat(document.getElementById('taper').value),
+    };
+  }
+
+  function buildAndDraw() {
+    const params = getParams();
+    const rules  = parseRules(params.rulesText);
+    const lstr   = generateString(params.axiom, rules, params.gen);
+
+    const { draws, maxDepth } = analyzeString(lstr);
+    document.getElementById('info-strlen').textContent = lstr.length.toLocaleString();
+    document.getElementById('info-draws').textContent  = draws.toLocaleString();
+    document.getElementById('info-depth').textContent  = maxDepth;
+    document.getElementById('preview-text').textContent = lstr.slice(0, 400) + (lstr.length > 400 ? '…' : '');
+    document.getElementById('gen-display').textContent  = params.gen;
+
+    drawLSystem(lstr, params, maxDepth);
+  }
+
+  function drawLSystem(lstr, params, maxDepth) {
+    p.clear();
+    p.background(10, 12, 14);
+
+    // subtle grid
+    p.stroke(18, 24, 28);
+    p.strokeWeight(1);
+    const gs = 40;
+    for (let x = 0; x < p.width; x += gs)  p.line(x, 0, x, p.height);
+    for (let y = 0; y < p.height; y += gs) p.line(0, y, p.width, y);
+
+    const W = p.width, H = p.height;
+    const angleRad = params.angleDeg * Math.PI / 180;
+
+    let x     = currentPreset.startX * W;
+    let y     = currentPreset.startY * H;
+    let angle = (currentPreset.startAngle || -90) * Math.PI / 180;
+    const stack = [];
+    let depth = 0;
+    const md  = maxDepth || 1;
+
+    p.strokeCap(p.ROUND);
+
+    for (const ch of lstr) {
+      if (ch === 'F' || ch === 'G') {
+        const nx = x + params.linelen * Math.cos(angle);
+        const ny = y + params.linelen * Math.sin(angle);
+
+        if (ch === 'F') {
+          const t  = depth / md;                    // 0 = root, 1 = tip
+          const r  = 180 - t * 120;                 // warm → cool
+          const g  = 120 + t * 100;
+          const bv = 60  + t * 40;
+          const a  = 230 - t * 70;
+          const sw = Math.max(0.3, (2.5 - t * 2.0) * params.taper);
+          p.stroke(r, g, bv, a);
+          p.strokeWeight(sw);
+          p.line(x, y, nx, ny);
+        }
+        x = nx; y = ny;
+      } else if (ch === '+') {
+        angle += angleRad;
+      } else if (ch === '-') {
+        angle -= angleRad;
+      } else if (ch === '[') {
+        stack.push({ x, y, angle, depth });
+        depth++;
+      } else if (ch === ']') {
+        const s = stack.pop();
+        if (s) { x = s.x; y = s.y; angle = s.angle; depth = s.depth; }
+      }
+    }
+  }
+
+  window.rebuildAndDraw = buildAndDraw;
+
+  p.setup = function() {
+    const c = document.getElementById('canvas-container');
+    const cnv = p.createCanvas(c.clientWidth, c.clientHeight);
+    cnv.parent('canvas-container');
+    p.noLoop();
+    buildAndDraw();
+  };
+
+  p.windowResized = function() {
+    const c = document.getElementById('canvas-container');
+    p.resizeCanvas(c.clientWidth, c.clientHeight);
+    buildAndDraw();
+  };
+});
+
+// ─── UI WIRING ─────────────────────────────────────────────────────────────
+document.getElementById('gen').addEventListener('input', e => {
+  document.getElementById('gen-val').textContent = e.target.value;
+});
+document.getElementById('angle').addEventListener('input', e => {
+  document.getElementById('angle-val').textContent = e.target.value + '°';
+});
+document.getElementById('linelen').addEventListener('input', e => {
+  document.getElementById('len-val').textContent = e.target.value;
+});
+document.getElementById('taper').addEventListener('input', e => {
+  document.getElementById('taper-val').textContent = parseFloat(e.target.value).toFixed(2);
+});
+document.getElementById('mut-strength').addEventListener('input', e => {
+  document.getElementById('mut-val').textContent = e.target.value;
+});
+document.getElementById('apply-btn').addEventListener('click', () => rebuildAndDraw());
+
+document.querySelectorAll('.preset-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const pr = PRESETS[btn.dataset.preset];
+    currentPreset = pr;
+    document.getElementById('axiom').value   = pr.axiom;
+    document.getElementById('rules').value   = pr.rules;
+    document.getElementById('angle').value   = pr.angle;
+    document.getElementById('angle-val').textContent = pr.angle + '°';
+    document.getElementById('gen').value     = pr.gen;
+    document.getElementById('gen-val').textContent   = pr.gen;
+    document.getElementById('linelen').value = pr.len;
+    document.getElementById('len-val').textContent   = pr.len;
+    rebuildAndDraw();
+  });
+});
+
+document.getElementById('mut-insert').addEventListener('click', () => applyMutation('insert'));
+document.getElementById('mut-delete').addEventListener('click', () => applyMutation('delete'));
+document.getElementById('mut-swap').addEventListener('click',   () => applyMutation('swap'));
+document.getElementById('mut-angle').addEventListener('click',  () => mutateAngle());
+document.getElementById('mut-random').addEventListener('click', () => applyMutation('random'));
+</script>
+</body>
+</html>
