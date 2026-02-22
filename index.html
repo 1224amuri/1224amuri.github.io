@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<link rel="icon" type="image/png" href="life7.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>nonsensei — Jagrut Amuri</title>
@@ -76,6 +77,41 @@
             border-bottom: 1px solid var(--moss);
             position: relative;
         }
+        
+        .intro-row {
+    		display: flex;
+    		align-items: center;
+    		gap: 3rem;
+    		padding: 3rem 0 2rem;
+		}
+
+		.intro-row .intro {
+    		padding: 0;
+    		flex: 1;
+		}
+
+		.intro-graphic {
+    		flex-shrink: 0;
+    		width: 360px;
+		}
+
+		.intro-graphic img {
+    		width: 100%;
+    		mix-blend-mode: lighten;
+    		opacity: 0.85;
+    		filter: saturate(1.3) brightness(1.1);
+		}
+
+		@media (max-width: 640px) {
+    		.intro-row {
+        	flex-direction: column;
+        	gap: 1.5rem;
+    	}
+    	.intro-graphic {
+        	width: 160px;
+       		align-self: flex-end;
+    	}
+	}
 
         .site-name {
             font-family: var(--mono);
@@ -555,13 +591,16 @@
             <div class="coord-line">12.9716° N, 77.5946° E — Bengaluru</div>
         </div>
     </header>
-
+    
+  <div class="intro-row">
     <div class="intro">
         <p>
-            A <em>garden</em> of ongoing work, thinking, and making. Things here are alive — some half-formed, some finished, all worth looking at.
+            A <em>garden</em> of ongoing work, thinking, and making. Things here are alive, some half-formed, some finished, all mirroring the direction of my curiosity. This is a
+            nexus for who I am and my side quests. 
         </p>
         <p>
-            I'm interested in what happens when you pay close attention to living systems — biological, social, technological. This is where that attention goes.
+            Here you'll find simulations, field notes, teaching experiments, and questions still unfolding.
+            I'm drawn to what emerges when we observe living systems closely. When we use our tools not to dominate them, but to see more deeply.
         </p>
         <div class="tag-row">
             <span class="tag">ecology</span>
@@ -572,8 +611,14 @@
             <span class="tag">biomimicry</span>
             <span class="tag">making</span>
         </div>
-    </div>
+    </div>                          <!-- closes .intro -->
 
+    <div class="intro-graphic">
+        <img src="life7.png" alt="brushstroke graphic">
+    </div>                          <!-- closes .intro-graphic -->
+
+	</div>                              <!-- closes .intro-row -->
+   
     <div class="section-marker">
         <span>the patches</span>
     </div>
