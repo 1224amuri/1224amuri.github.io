@@ -95,11 +95,12 @@
     		width: 360px;
 		}
 
-		.intro-graphic img {
-    		width: 100%;
-    		mix-blend-mode: lighten;
-    		opacity: 0.85;
-    		filter: saturate(1.3) brightness(1.1);
+		#plant-sim canvas {
+    		width: 100% !important;
+    		height: auto !important;
+    		display: block;
+    		border-radius: 4px;
+    		opacity: 0.92;
 		}
 
 		@media (max-width: 640px) {
@@ -614,7 +615,7 @@
     </div>                          <!-- closes .intro -->
 
     <div class="intro-graphic">
-        <img src="life7.png" alt="brushstroke graphic">
+        <div id="plant-sim"></div>
     </div>                          <!-- closes .intro-graphic -->
 
 	</div>                              <!-- closes .intro-row -->
@@ -749,5 +750,122 @@
         }, 3000);
     }
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
+<script>
+// ── Plant L-System Simulation ──
+class PlantSystem {
+  constructor(p) {
+    this.p = p;
+    this.lstr = "S";
+    this.len = 2.6;
+    this.angle = 0.13 * p.PI;
+    this.angleX = 0.3 * p.PI;
+    this.startHue = 0;
+  }
+  display() {
+    const p = this.p;
+    let sWeight = 15;
+    let brightness = 10;
+    let hue = this.startHue;
+    for (let i = 0; i < this.lstr.length; i++) {
+      switch(this.lstr[i]) {
+        case 'F':
+          p.strokeWeight(sWeight);
+          p.stroke(hue, 100, brightness);
+          p.line(0, 0, 0, this.len, 0, 0);
+          p.translate(this.len, 0, 0);
+          break;
+        case 'l':
+          p.rotate(-this.angle);
+          p.rotateX(-this.angleX);
+          break;
+        case 'r':
+          p.rotate(this.angle);
+          p.rotateX(this.angleX);
+          break;
+        case '[':
+          p.push();
+          break;
+        case ']':
+          p.pop();
+          break;
+        case 'u':
+          sWeight *= 0.8;
+          brightness *= 1.5;
+          hue = (hue + 10) % 360;
+          break;
+        case 'd':
+          sWeight *= (1.0 / 0.8);
+          brightness *= (1.0 / 1.5);
+          hue = ((hue - 10) + 360) % 360;
+          break;
+      }
+    }
+  }
+  expand() {
+    const p = this.p;
+    let newString = "";
+    for (let i = 0; i < this.lstr.length; i++) {
+      switch(this.lstr[i]) {
+        case 'S':
+          newString += "FB";
+          break;
+        case 'F':
+          if (p.random(100) < 50) {
+            newString += "FF";
+          } else {
+            newString += "F";
+          }
+          break;
+        case 'B':
+          if (p.random(100) < 50) {
+            newString += "[ullFBd][urFBd]";
+          } else {
+            newString += "[ulFBd][urrFBd]";
+          }
+          break;
+        default:
+          newString += this.lstr[i];
+          break;
+      }
+    }
+    this.lstr = newString;
+  }
+}
+
+new p5(function(p) {
+  let pl;
+
+  p.setup = function() {
+    const size = Math.min(360, window.innerWidth < 640 ? 160 : 360);
+    const cnv = p.createCanvas(size, size, p.WEBGL);
+    cnv.parent('plant-sim');
+    p.colorMode(p.HSB, 360, 100, 100);
+   // p.frameRate(5);
+    pl = new PlantSystem(p);
+  };
+
+  p.draw = function() {
+    p.background('#3d5c3a');
+    p.push();
+    p.translate(0, p.height * 0.5 - 10);
+    p.rotate(-0.5 * p.PI);
+    p.rotateX(0.01 * p.PI * p.frameCount);
+    p.scale(0.6);
+    pl.display();
+    p.pop();
+    if (p.frameCount < 12) {
+      pl.expand();
+    }
+  };
+
+  p.windowResized = function() {
+    const size = Math.min(360, window.innerWidth < 640 ? 160 : 360);
+    p.resizeCanvas(size, size);
+  };
+});
+</script>
+
 </body>
 </html>
