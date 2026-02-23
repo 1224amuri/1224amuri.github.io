@@ -109,10 +109,25 @@
         	gap: 1.5rem;
     	}
     	.intro-graphic {
-        	width: 160px;
-       		align-self: flex-end;
+        	width: 100%;
+       		align-self: stretch;
     	}
 	}
+
+		.sim-caption {
+    		margin-top: 0.6rem;
+    		font-family: var(--frag);
+    		font-size: 0.68rem;
+    		color: var(--lichen);
+    		letter-spacing: 0.06em;
+    		line-height: 1.5;
+    		opacity: 0.8;
+		}
+
+		.sim-caption span {
+    		color: var(--moss);
+    		font-style: italic;
+		}
 
         .site-name {
             font-family: var(--mono);
@@ -616,6 +631,10 @@
 
     <div class="intro-graphic">
         <div id="plant-sim"></div>
+        <div class="sim-caption">
+            L-system · procedural botany<br>
+            <span>every visit grows a unique tree</span>
+        </div>
     </div>                          <!-- closes .intro-graphic -->
 
 	</div>                              <!-- closes .intro-row -->
@@ -838,11 +857,11 @@ new p5(function(p) {
   let pl;
 
   p.setup = function() {
-    const size = Math.min(360, window.innerWidth < 640 ? 160 : 360);
-    const cnv = p.createCanvas(size, size, p.WEBGL);
+    const w = window.innerWidth < 640 ? Math.min(window.innerWidth - 40, 360) : 360;
+    const h = window.innerWidth < 640 ? Math.round(w * 1.2) : 480;
+    const cnv = p.createCanvas(w, h, p.WEBGL);
     cnv.parent('plant-sim');
     p.colorMode(p.HSB, 360, 100, 100);
-   // p.frameRate(5);
     pl = new PlantSystem(p);
   };
 
@@ -852,7 +871,7 @@ new p5(function(p) {
     p.translate(0, p.height * 0.5 - 10);
     p.rotate(-0.5 * p.PI);
     p.rotateX(0.01 * p.PI * p.frameCount);
-    p.scale(0.6);
+    p.scale(0.7);
     pl.display();
     p.pop();
     if (p.frameCount < 12) {
@@ -861,8 +880,9 @@ new p5(function(p) {
   };
 
   p.windowResized = function() {
-    const size = Math.min(360, window.innerWidth < 640 ? 160 : 360);
-    p.resizeCanvas(size, size);
+    const w = window.innerWidth < 640 ? Math.min(window.innerWidth - 40, 360) : 360;
+    const h = window.innerWidth < 640 ? Math.round(w * 1.2) : 480;
+    p.resizeCanvas(w, h);
   };
 });
 </script>
