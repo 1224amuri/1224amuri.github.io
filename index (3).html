@@ -80,9 +80,9 @@
         
         .intro-row {
     		display: flex;
-    		align-items: center;
+    		align-items: flex-start;
     		gap: 3rem;
-    		padding: 3rem 0 2rem;
+    		padding: 2rem 0 1.5rem;
 		}
 
 		.intro-row .intro {
@@ -128,6 +128,17 @@
     		color: var(--moss);
     		font-style: italic;
 		}
+
+		.tree-note {
+            font-family: var(--serif);
+            font-size: 0.85rem;
+            line-height: 1.7;
+            color: var(--ink);
+            opacity: 0.75;
+            font-style: italic;
+            max-width: 680px;
+            margin: 0.5rem 0 0;
+        }
 
         .site-name {
             font-family: var(--mono);
@@ -185,7 +196,7 @@
 
         /* ── INTRO ── */
         .intro {
-            padding: 3rem 0 2rem;
+            padding: 0;
             max-width: 640px;
         }
 
@@ -226,7 +237,7 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            margin: 4rem 0 2rem;
+            margin: 1.5rem 0 2rem;
         }
 
         .section-marker span {
@@ -609,6 +620,14 @@
     </header>
     
   <div class="intro-row">
+    <div class="intro-graphic">
+        <div id="plant-sim"></div>
+        <div class="sim-caption">
+            L-system · procedural botany<br>
+            <span>Each visit to my small corner of the internet grows a completely unique tree.</span>
+        </div>
+    </div>                          <!-- closes .intro-graphic -->
+
     <div class="intro">
         <p>
             A <em>garden</em> of ongoing work, thinking, and making. Things here are alive, some half-formed, some finished, all mirroring the direction of my curiosity. This is a
@@ -629,15 +648,9 @@
         </div>
     </div>                          <!-- closes .intro -->
 
-    <div class="intro-graphic">
-        <div id="plant-sim"></div>
-        <div class="sim-caption">
-            L-system · procedural botany<br>
-            <span>every visit grows a unique tree</span>
-        </div>
-    </div>                          <!-- closes .intro-graphic -->
-
 	</div>                              <!-- closes .intro-row -->
+
+    <p class="tree-note">The tree above is a Tabebuia rosea — a Brazilian native that Bangalore adopted as its own. Every March, these trees shed their leaves and erupt into clouds of pink along many of the prominent avenues, briefly turning the city surreal. This is my small homage to that annual spectacle. Over the seasons, I will try to grow trees that have imprinted on me.</p>
    
     <div class="section-marker">
         <span>the patches</span>
@@ -785,13 +798,13 @@ class PlantSystem {
   display() {
     const p = this.p;
     let sWeight = 15;
-    let brightness = 10;
+    let brightness = 1;
     let hue = this.startHue;
     for (let i = 0; i < this.lstr.length; i++) {
       switch(this.lstr[i]) {
         case 'F':
           p.strokeWeight(sWeight);
-          p.stroke(hue, 100, brightness);
+          p.stroke(hue, 8, brightness);
           p.line(0, 0, 0, this.len, 0, 0);
           p.translate(this.len, 0, 0);
           break;
@@ -822,8 +835,8 @@ class PlantSystem {
         case 'B':
           p.push();
           p.noStroke();
-          p.fill(0, 63, 95);
-          p.sphere(sWeight * 1.8);
+          p.fill(338, 65, 100);
+          p.sphere(sWeight * 3.3);
           p.pop();
           break;
       }
