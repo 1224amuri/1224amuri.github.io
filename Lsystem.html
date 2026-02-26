@@ -264,7 +264,67 @@
     color: var(--accent);
   }
 
-  /* ── READOUT ── */
+  /* ── MOBILE PANEL TOGGLE ── */
+  #panel-toggle {
+    display: none;
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 100;
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    color: var(--label);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 8px 12px;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: all 0.15s;
+  }
+
+  #panel-toggle:hover {
+    border-color: var(--label);
+    color: var(--text);
+  }
+
+  @media (max-width: 600px) {
+    #panel-toggle {
+      display: block;
+    }
+
+    #panel {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 50;
+      transform: translateX(-100%);
+      transition: transform 0.25s ease;
+      width: 280px;
+      min-width: 280px;
+      box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+    }
+
+    #panel.open {
+      transform: translateX(0);
+    }
+
+    #panel-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 40;
+    }
+
+    #panel-backdrop.visible {
+      display: block;
+    }
+
+    #sim-wrap {
+      width: 100vw;
+    }
+  }
   .readout {
     margin: 12px 20px 0;
     padding: 10px;
@@ -412,6 +472,8 @@ B=A</textarea>
 <!-- CANVAS -->
 <div id="sim-wrap">
   <div id="canvas-mount"></div>
+  <button id="panel-toggle">☰ controls</button>
+  <div id="panel-backdrop"></div>
   <div class="preset-name-overlay" id="preset-overlay">Barnsley Fern</div>
   <div class="canvas-label">l-system · 2d</div>
 </div>
@@ -687,7 +749,29 @@ new p5(function(p) {
   };
 });
 
-// ─── BRANCH COUNT VISIBILITY ────────────────────────────────────────────────
+// ─── MOBILE PANEL TOGGLE ────────────────────────────────────────────────────
+const panelToggle = document.getElementById('panel-toggle');
+const panelEl = document.getElementById('panel');
+const backdrop = document.getElementById('panel-backdrop');
+
+function openPanel() {
+  panelEl.classList.add('open');
+  backdrop.classList.add('visible');
+  panelToggle.textContent = '✕ close';
+}
+
+function closePanel() {
+  panelEl.classList.remove('open');
+  backdrop.classList.remove('visible');
+  panelToggle.textContent = '☰ controls';
+}
+
+panelToggle.addEventListener('click', () => {
+  panelEl.classList.contains('open') ? closePanel() : openPanel();
+});
+
+backdrop.addEventListener('click', closePanel);
+
 function setBranchVisibility(mode) {
   document.getElementById('branches-control').style.display =
     mode === 'lsystemtree' ? 'block' : 'none';

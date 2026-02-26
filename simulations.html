@@ -34,7 +34,7 @@
             font-family: var(--frag);
             min-height: 100vh;
             overflow-x: hidden;
-            cursor: crosshair;
+            cursor: default;
         }
 
         /* Grain texture */
@@ -59,7 +59,7 @@
 
         .bg-flora svg {
             position: absolute;
-            opacity: 0.6;
+            opacity: 0.3;
         }
 
         /* ── PAGE ── */
@@ -560,23 +560,38 @@
 </head>
 <body>
 
-<!-- Background botanical illustration (SVG) -->
+<!-- Background topographic contour illustration -->
 <div class="bg-flora">
-    <svg style="bottom:-80px; right:-60px; width: 500px; height: 500px;" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M200 380 C200 380 80 300 80 180 C80 80 140 20 200 20" stroke="#7abf6e" stroke-width="2"/>
-        <path d="M200 380 C200 380 320 300 320 180 C320 80 260 20 200 20" stroke="#7abf6e" stroke-width="2"/>
-        <ellipse cx="120" cy="160" rx="55" ry="28" transform="rotate(-35 120 160)" stroke="#7abf6e" stroke-width="1.5"/>
-        <ellipse cx="280" cy="140" rx="55" ry="28" transform="rotate(35 280 140)" stroke="#7abf6e" stroke-width="1.5"/>
-        <ellipse cx="100" cy="240" rx="45" ry="22" transform="rotate(-20 100 240)" stroke="#4a8c3f" stroke-width="1.5"/>
-        <ellipse cx="310" cy="220" rx="45" ry="22" transform="rotate(20 310 220)" stroke="#4a8c3f" stroke-width="1.5"/>
-        <circle cx="200" cy="20" r="14" stroke="#f5c842" stroke-width="2"/>
-        <path d="M200 6 L200 0 M200 34 L200 40 M186 20 L180 20 M214 20 L220 20" stroke="#f5c842" stroke-width="1.5"/>
+    <!-- Top-left hill cluster -->
+    <svg style="top:-80px; left:-80px; width: 440px; height: 440px;" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- concentric ellipses centred at 200,200, rotated -25deg, scaling outward -->
+        <g transform="translate(200,200) rotate(-25)">
+            <ellipse rx="18"  ry="10"  stroke="#f5c842" stroke-width="1"   opacity="0.7"/>
+            <ellipse rx="36"  ry="20"  stroke="#7abf6e" stroke-width="0.9" opacity="0.65"/>
+            <ellipse rx="58"  ry="32"  stroke="#4a8c3f" stroke-width="0.9" opacity="0.6"/>
+            <ellipse rx="82"  ry="46"  stroke="#7abf6e" stroke-width="0.8" opacity="0.55"/>
+            <ellipse rx="108" ry="62"  stroke="#4a8c3f" stroke-width="0.8" opacity="0.5"/>
+            <ellipse rx="136" ry="80"  stroke="#7abf6e" stroke-width="0.7" opacity="0.4"/>
+            <ellipse rx="166" ry="100" stroke="#4a8c3f" stroke-width="0.7" opacity="0.32"/>
+            <ellipse rx="198" ry="122" stroke="#7abf6e" stroke-width="0.6" opacity="0.24"/>
+            <ellipse rx="232" ry="146" stroke="#4a8c3f" stroke-width="0.6" opacity="0.16"/>
+        </g>
     </svg>
-    <svg style="top:-40px; left:-30px; width: 350px; height: 350px;" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M150 280 C60 230 30 140 60 60" stroke="#4a8c3f" stroke-width="2"/>
-        <ellipse cx="60" cy="110" rx="40" ry="20" transform="rotate(-50 60 110)" stroke="#4a8c3f" stroke-width="1.5"/>
-        <ellipse cx="90" cy="180" rx="40" ry="20" transform="rotate(-30 90 180)" stroke="#7abf6e" stroke-width="1.5"/>
-        <path d="M150 280 L155 240 M155 240 L180 220 M155 240 L135 215" stroke="#4a8c3f" stroke-width="1.5"/>
+
+    <!-- Bottom-right hill cluster -->
+    <svg style="bottom:-80px; right:-80px; width: 460px; height: 460px;" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- concentric ellipses centred at 200,200, rotated 20deg, scaling outward -->
+        <g transform="translate(200,200) rotate(20)">
+            <ellipse rx="16"  ry="11"  stroke="#f5c842" stroke-width="1"   opacity="0.7"/>
+            <ellipse rx="34"  ry="22"  stroke="#7abf6e" stroke-width="0.9" opacity="0.65"/>
+            <ellipse rx="55"  ry="36"  stroke="#4a8c3f" stroke-width="0.9" opacity="0.6"/>
+            <ellipse rx="78"  ry="52"  stroke="#7abf6e" stroke-width="0.8" opacity="0.55"/>
+            <ellipse rx="104" ry="70"  stroke="#4a8c3f" stroke-width="0.8" opacity="0.5"/>
+            <ellipse rx="132" ry="90"  stroke="#7abf6e" stroke-width="0.7" opacity="0.4"/>
+            <ellipse rx="162" ry="112" stroke="#4a8c3f" stroke-width="0.7" opacity="0.32"/>
+            <ellipse rx="194" ry="136" stroke="#7abf6e" stroke-width="0.6" opacity="0.24"/>
+            <ellipse rx="228" ry="162" stroke="#4a8c3f" stroke-width="0.6" opacity="0.16"/>
+        </g>
     </svg>
 </div>
 
@@ -601,7 +616,7 @@
     <div class="manifesto">
         <div class="manifesto-icon">🌿</div>
         <p>
-            Technology as a way of <span>understanding nature</span>, not replacing it. Each simulation here asks questions — can complex natural behaviours be reliably distilled into simple rules ? 
+            Technology as a way of understanding nature. Each simulation here asks questions — can complex natural behaviours be reliably distilled into simple rules ? 
     </div>
 
     <!-- ── SIMULATIONS GALLERY ── -->
