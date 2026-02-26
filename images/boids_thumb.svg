@@ -1,0 +1,22 @@
+<svg viewBox="0 0 400 225" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="225" fill="#0a0f0a"/>
+  <path d="M20 160 Q80 80 160 100 Q240 120 320 60 Q360 40 390 50" stroke="#4a8c3f" stroke-width="1" opacity="0.4"/>
+  <path d="M20 170 Q90 90 170 110 Q250 130 330 70 Q365 52 390 60" stroke="#4a8c3f" stroke-width="0.8" opacity="0.3"/>
+  <path d="M20 150 Q75 70 155 90 Q235 110 315 55 Q355 35 390 42" stroke="#7abf6e" stroke-width="0.6" opacity="0.25"/>
+  <polygon points="62,105 68,108 62,111" fill="#7abf6e" opacity="0.9" transform="rotate(-40, 65, 108)"/>
+  <polygon points="72,98 78,101 72,104" fill="#7abf6e" opacity="0.8" transform="rotate(-38, 75, 101)"/>
+  <polygon points="55,112 61,115 55,118" fill="#4a8c3f" opacity="0.7" transform="rotate(-42, 58, 115)"/>
+  <polygon points="80,92 86,95 80,98" fill="#7abf6e" opacity="0.85" transform="rotate(-36, 83, 95)"/>
+  <polygon points="50,120 56,123 50,126" fill="#4a8c3f" opacity="0.6" transform="rotate(-44, 53, 123)"/>
+  <polygon points="175,107 181,110 175,113" fill="#7abf6e" opacity="0.9" transform="rotate(5, 178, 110)"/>
+  <polygon points="185,112 191,115 185,118" fill="#7abf6e" opacity="0.8" transform="rotate(7, 188, 115)"/>
+  <polygon points="165,103 171,106 165,109" fill="#4a8c3f" opacity="0.7" transform="rotate(3, 168, 106)"/>
+  <polygon points="195,105 201,108 195,111" fill="#7abf6e" opacity="0.75" transform="rotate(6, 198, 108)"/>
+  <polygon points="170,116 176,119 170,122" fill="#4a8c3f" opacity="0.65" transform="rotate(8, 173, 119)"/>
+  <polygon points="318,65 324,68 318,71" fill="#7abf6e" opacity="0.9" transform="rotate(-55, 321, 68)"/>
+  <polygon points="330,58 336,61 330,64" fill="#7abf6e" opacity="0.8" transform="rotate(-52, 333, 61)"/>
+  <polygon points="308,72 314,75 308,78" fill="#4a8c3f" opacity="0.7" transform="rotate(-57, 311, 75)"/>
+  <polygon points="340,55 346,58 340,61" fill="#7abf6e" opacity="0.75" transform="rotate(-50, 343, 58)"/>
+  <polygon points="322,75 328,78 322,81" fill="#4a8c3f" opacity="0.6" transform="rotate(-58, 325, 78)"/>
+  <text x="16" y="210" font-family="monospace" font-size="9" fill="#4a8c3f" opacity="0.5" letter-spacing="2">BOIDS · FLOCKING · EMERGENCE</text>
+</svg>

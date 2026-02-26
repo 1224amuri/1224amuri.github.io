@@ -1,0 +1,23 @@
+<svg viewBox="0 0 400 225" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="225" fill="#0a0f0a"/>
+  <circle cx="60"  cy="50"  r="18" stroke="#7abf6e" stroke-width="0.8" opacity="0.35"/>
+  <circle cx="60"  cy="50"  r="10" stroke="#7abf6e" stroke-width="0.8" opacity="0.4"/>
+  <circle cx="60"  cy="50"  r="3"  fill="#f5c842" opacity="0.5"/>
+  <circle cx="110" cy="40"  r="14" stroke="#7abf6e" stroke-width="0.8" opacity="0.3"/>
+  <circle cx="110" cy="40"  r="7"  stroke="#7abf6e" stroke-width="0.7" opacity="0.35"/>
+  <circle cx="110" cy="40"  r="2"  fill="#f5c842" opacity="0.45"/>
+  <circle cx="40"  cy="90"  r="12" stroke="#4a8c3f" stroke-width="0.8" opacity="0.3"/>
+  <circle cx="40"  cy="90"  r="5"  stroke="#7abf6e" stroke-width="0.7" opacity="0.35"/>
+  <path d="M160 30 Q180 60 160 90 Q140 120 160 150 Q180 180 160 210" stroke="#7abf6e" stroke-width="1" opacity="0.3"/>
+  <path d="M180 30 Q200 65 180 95 Q160 125 180 155 Q200 185 180 210" stroke="#7abf6e" stroke-width="1" opacity="0.28"/>
+  <path d="M200 30 Q220 65 200 95 Q180 125 200 155 Q220 185 200 210" stroke="#7abf6e" stroke-width="1" opacity="0.28"/>
+  <path d="M220 30 Q240 65 220 95 Q200 125 220 155 Q240 185 220 210" stroke="#7abf6e" stroke-width="1" opacity="0.26"/>
+  <path d="M240 30 Q260 65 240 95 Q220 125 240 155 Q260 185 240 210" stroke="#7abf6e" stroke-width="1" opacity="0.24"/>
+  <circle cx="330" cy="170" r="20" stroke="#7abf6e" stroke-width="0.8" opacity="0.35"/>
+  <circle cx="330" cy="170" r="12" stroke="#7abf6e" stroke-width="0.8" opacity="0.4"/>
+  <circle cx="330" cy="170" r="4"  fill="#f5c842" opacity="0.5"/>
+  <circle cx="370" cy="155" r="14" stroke="#4a8c3f" stroke-width="0.8" opacity="0.3"/>
+  <circle cx="370" cy="155" r="6"  stroke="#7abf6e" stroke-width="0.7" opacity="0.35"/>
+  <circle cx="355" cy="200" r="10" stroke="#4a8c3f" stroke-width="0.7" opacity="0.25"/>
+  <text x="16" y="210" font-family="monospace" font-size="9" fill="#4a8c3f" opacity="0.5" letter-spacing="2">GRAY-SCOTT · TURING · MORPHOGENESIS</text>
+</svg>

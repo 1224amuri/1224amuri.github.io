@@ -1,0 +1,29 @@
+<svg viewBox="0 0 400 225" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="225" fill="#0a0f0a"/>
+  <circle cx="200" cy="112" r="5" fill="#f5c842" opacity="0.9"/>
+  <circle cx="80"  cy="60"  r="4" fill="#f5c842" opacity="0.7"/>
+  <circle cx="320" cy="55"  r="4" fill="#f5c842" opacity="0.7"/>
+  <circle cx="60"  cy="170" r="4" fill="#f5c842" opacity="0.7"/>
+  <circle cx="340" cy="165" r="4" fill="#f5c842" opacity="0.7"/>
+  <circle cx="200" cy="195" r="3.5" fill="#f5c842" opacity="0.6"/>
+  <circle cx="130" cy="130" r="3" fill="#7abf6e" opacity="0.6"/>
+  <circle cx="270" cy="125" r="3" fill="#7abf6e" opacity="0.6"/>
+  <path d="M200 112 Q140 85 80 60"    stroke="#f5c842" stroke-width="1.2" opacity="0.5"/>
+  <path d="M200 112 Q260 83 320 55"   stroke="#f5c842" stroke-width="1.2" opacity="0.5"/>
+  <path d="M200 112 Q130 141 60 170"  stroke="#f5c842" stroke-width="1.0" opacity="0.45"/>
+  <path d="M200 112 Q270 138 340 165" stroke="#f5c842" stroke-width="1.0" opacity="0.45"/>
+  <path d="M200 112 Q200 153 200 195" stroke="#f5c842" stroke-width="0.9" opacity="0.4"/>
+  <path d="M80 60 Q105 95 130 130"    stroke="#7abf6e" stroke-width="0.7" opacity="0.35"/>
+  <path d="M320 55 Q295 90 270 125"   stroke="#7abf6e" stroke-width="0.7" opacity="0.35"/>
+  <path d="M60 170 Q130 152 200 195"  stroke="#7abf6e" stroke-width="0.6" opacity="0.3"/>
+  <path d="M340 165 Q270 180 200 195" stroke="#7abf6e" stroke-width="0.6" opacity="0.3"/>
+  <path d="M130 130 Q165 121 200 112" stroke="#7abf6e" stroke-width="0.6" opacity="0.3"/>
+  <path d="M270 125 Q235 118 200 112" stroke="#7abf6e" stroke-width="0.6" opacity="0.3"/>
+  <path d="M80 60 Q190 40 320 55"     stroke="#4a8c3f" stroke-width="0.5" opacity="0.2"/>
+  <path d="M60 170 Q200 185 340 165"  stroke="#4a8c3f" stroke-width="0.5" opacity="0.2"/>
+  <circle cx="140" cy="86"  r="1.2" fill="#f5c842" opacity="0.4"/>
+  <circle cx="260" cy="83"  r="1.2" fill="#f5c842" opacity="0.4"/>
+  <circle cx="120" cy="142" r="1.2" fill="#7abf6e" opacity="0.4"/>
+  <circle cx="280" cy="138" r="1.2" fill="#7abf6e" opacity="0.4"/>
+  <text x="16" y="210" font-family="monospace" font-size="9" fill="#4a8c3f" opacity="0.5" letter-spacing="2">PHYSARUM · NETWORK · PATHFINDING</text>
+</svg>
