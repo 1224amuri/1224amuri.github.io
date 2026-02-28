@@ -1,0 +1,44 @@
+[
+  {
+    "title": "Moon Spirit",
+    "medium": "fine liner · acrylic",
+    "year": "2024",
+    "dimensions": "A4",
+    "description": "A Kachina-like figure rising from a blood moon. Dense hatching meets flat red.",
+    "process": "Started with the red circle, painted flat and left to dry. Everything else was built in fine liner on top — the figure emerged slowly, tile by tile.",
+    "inspiration": "Hopi Kachina dolls. The idea that a spirit can have a body that is simultaneously geometric and alive.",
+    "meaning": "Something about ritual and stillness. The figure isn't doing anything — just being present against the red.",
+    "tags": ["ritual", "figure", "ink", "red"],
+    "image": "art_images/Moon_Spirit.jpg",
+    "filter": ["fine liner", "acrylic"],
+    "series": null
+  },
+  {
+    "title": "Trip Shi — I",
+    "medium": "fine liner",
+    "year": "2024",
+    "dimensions": "A3",
+    "description": "Tiled, mirrored, obsessive. A body fractured into geometric pattern.",
+    "process": "Drew on individual Post-it notes, then arranged and rearranged them until the symmetry felt right. No digital tools.",
+    "inspiration": "Islamic geometric tilework, and the way repeating units can build a face.",
+    "meaning": "The self as pattern. Identity as something assembled, not given.",
+    "tags": ["pattern", "symmetry", "geometric", "figure"],
+    "image": "art_images/Trip_Shi_preview.jpg",
+    "filter": ["fine liner"],
+    "series": "Trip Shi"
+  },
+  {
+    "title": "Leaf Portal",
+    "medium": "fine liner · mixed media",
+    "year": "2023",
+    "dimensions": "A4",
+    "description": "A dried leaf framed as a window into another world. The world outside is simpler than within.",
+    "process": "Found the leaf on a walk. Pressed it, then built the drawn world around it — the leaf became a negative space, a gap.",
+    "inspiration": "The idea that dead things can still be thresholds.",
+    "meaning": "Decay as doorway. The leaf is gone but the portal stays open.",
+    "tags": ["nature", "portal", "collage", "found object"],
+    "image": "art_images/IMG_6537.JPG",
+    "filter": ["fine liner", "mixed"],
+    "series": null
+  },
+]
