@@ -27,6 +27,7 @@
             --space-lg: 4rem;
             --space-xl: 6rem;
             --space-2xl: 8rem;
+            --grid: rgba(61, 92, 58, 0.08);
         }
 
         * {
@@ -66,6 +67,20 @@
             margin: 0 auto;
             padding: 0 var(--space-md);
         }
+        
+        
+		/* Grid background */
+			body::after {
+    		content: '';
+    		position: fixed;
+    		inset: 0;
+    		background-image: 
+        	linear-gradient(var(--grid) 1px, transparent 1px),
+        	linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    		background-size: 40px 40px;
+    		pointer-events: none;
+    		z-index: 0;
+		}
 
         /* Navigation */
         .nav {
