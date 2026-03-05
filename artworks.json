@@ -1,30 +1,32 @@
 [
   {
-    "title": "Moon Spirit",
+    "title": "Muuyawkatsina - Moon Spirit",
     "medium": "fine liner · acrylic",
-    "year": "2024",
+    "year": "2025",
     "dimensions": "A4",
-    "description": "A Kachina-like figure rising from a blood moon. Dense hatching meets flat red.",
-    "process": "Started with the red circle, painted flat and left to dry. Everything else was built in fine liner on top — the figure emerged slowly, tile by tile.",
-    "inspiration": "Hopi Kachina dolls. The idea that a spirit can have a body that is simultaneously geometric and alive.",
-    "meaning": "Something about ritual and stillness. The figure isn't doing anything — just being present against the red.",
-    "tags": ["ritual", "figure", "ink", "red"],
+    "description": "Illustration of Muuyawu, a Kachina moon spirit of the Hopi People of Southern Arizona - widely considered one of the oldest living cultures in the world. Originally by Gerald 
+    Dawavendewa (Hopi & Cherokee).",
+    "process": "Started with a pencil sketch of the figure and traced over that with fine liners of different weights. Red circle made with acrylic, painted flat and left to dry. It was a joy to 
+    try and find the perfect shade by mixing and experimenting.",
+    "inspiration": "Hopi culture and their Kachina dolls. I just loved the expression of the figure, reminiscent of a traveller of the nights.",
+    "meaning": "Something about being watched over at night by an entity that slightly unsettles you. The figure isn't doing anything — just being present, looking into you.",
+    "tags": ["folk","ritual", "figure", "ink", "red"],
     "image": "art_images/moon_spirit.jpg",
     "filter": ["fine liner", "acrylic"],
-    "series": null
+    "series": "Kachina"
   },
   {
-    "title": "Trip Shi — I",
-    "medium": "fine liner",
-    "year": "2024",
-    "dimensions": "A3",
-    "description": "Tiled, mirrored, obsessive. A body fractured into geometric pattern.",
-    "process": "Drew on individual Post-it notes, then arranged and rearranged them until the symmetry felt right. No digital tools.",
-    "inspiration": "Islamic geometric tilework, and the way repeating units can build a face.",
-    "meaning": "The self as pattern. Identity as something assembled, not given.",
-    "tags": ["pattern", "symmetry", "geometric", "figure"],
-    "image": "art_images/trip_shi.jpg",
-    "filter": ["fine liner"],
-    "series": "Trip Shi"
+    "title": "Taawakatsina - Sun Spirit",
+    "medium": "fine liner · acrylic ",
+    "year": "2025",
+    "dimensions": "A4",
+    "description": "My reimagination of Taawa, the sun spirit of the Hopi People regarded as the creator of the First World and a guide through existance. Often associated with fertility, life and growth.",
+    "process": "Rough pencil sketch traced on with fine liners. Used different hatching techniques to create visual somplexity and depth. I chose a lush deep green to represent the sun.",
+    "inspiration": "Hopi culture and their Kachina dolls. They usually have feline features and the sun spirit looked particularly playful just floating around",
+    "meaning": "To me, they respresent the will of life, radiating out.",
+    "tags": ["folk","ritual", "figure", "ink", "deep green"],
+    "image": "art_images/sun_spirit.jpg",
+    "filter": ["fine liner","acrylic"],
+    "series": "Kachina"
   }
 ]
