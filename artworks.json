@@ -26,5 +26,20 @@
     "image": "art_images/sun_spirit.jpg",
     "filter": ["fine liner","acrylic"],
     "series": "Kachina"
+  },
+  {
+    "title": "Madhubani_1",
+    "medium": "fine liner · acrylic markers ",
+    "year": "2026",
+    "dimensions": "A4",
+    "description": "My highly simplified take on the classic Tree of Life motif seen in various artforms across the country. Representing the interconnectedness of all life. This was a gift to my fiance's grandmother so it needed extra care and patience. I tried to incorporate elements that dont usually go into this sort of imagery, like the sky or the arches. ",
+    "process": "Rough pencil sketch of half of the tree made on tracing paper and mirrored on the ither side to create symmetry then traced on with fine liners. Used the finest point liner to hatch and dot, somethign I greatly enjoy doing.",
+    "inspiration": "Tree of life motif in Pattachitra style of Odisha. Border is a common pattern in Madhubani. The gold represents the 'fruits' of life.",
+    "meaning": "It means family and beauty. Projecting our hopes into the future.",
+    "tags": ["folk", "tree of life", "ink", "Pattachitra"],
+    "image": "art_images/tree_1.jpg",
+    "filter": ["fine liner","acrylic markers"],
+    "series": "Pattachitra"
   }
+  
 ]
