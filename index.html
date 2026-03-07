@@ -603,6 +603,111 @@
             opacity: 0.22;
             transition: opacity 0.3s;
         }
+
+        /* ── CV FIELD NOTE STRIP ── */
+        .cv-strip {
+            margin: 0 0 2rem;
+            position: relative;
+            text-decoration: none;
+            display: block;
+            border-top: 1px dashed var(--moss);
+            border-bottom: 1px dashed var(--moss);
+            padding: 1.1rem 1.4rem;
+            background: rgba(61, 92, 58, 0.04);
+            transition: background 0.25s ease;
+            overflow: hidden;
+        }
+
+        .cv-strip:hover {
+            background: rgba(61, 92, 58, 0.09);
+        }
+
+        .cv-strip::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(158,74,42,0.07), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cv-strip:hover::before { left: 150%; }
+
+        .cv-strip-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .cv-strip-left {
+            display: flex;
+            align-items: baseline;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        .cv-strip-tag {
+            font-family: var(--frag);
+            font-size: 0.62rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--rust);
+            background: rgba(158, 74, 42, 0.1);
+            padding: 0.2rem 0.5rem;
+            border: 1px solid rgba(158, 74, 42, 0.3);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .cv-strip-name {
+            font-family: var(--mono);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--moss);
+            letter-spacing: -0.02em;
+            transition: color 0.2s;
+        }
+
+        .cv-strip-meta {
+            font-family: var(--frag);
+            font-size: 0.7rem;
+            color: var(--dusk);
+            letter-spacing: 0.04em;
+        }
+
+        .cv-strip-meta span {
+            color: var(--lichen);
+            margin: 0 0.4rem;
+        }
+
+        .cv-strip-cta {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .cv-strip-label {
+            font-family: var(--frag);
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            color: var(--moss);
+            text-transform: lowercase;
+        }
+
+        .cv-strip-arrow {
+            font-family: var(--mono);
+            font-size: 1.1rem;
+            color: var(--rust);
+            transition: transform 0.2s ease;
+            display: inline-block;
+        }
+
+        .cv-strip:hover .cv-strip-arrow { transform: translateX(5px); }
+        .cv-strip:hover .cv-strip-name  { color: var(--rust); }
     </style>
 </head>
 <body>
@@ -710,6 +815,24 @@
         </a>
 
     </div>
+
+    <!-- CV FIELD NOTE STRIP -->
+    <a href="resume.html" class="cv-strip">
+        <div class="cv-strip-inner">
+            <div class="cv-strip-left">
+                <div class="cv-strip-tag">Curriculum Vitae</div>
+                <div class="cv-strip-name">Jagrut Amuri</div>
+                <div class="cv-strip-meta">
+                    Biologist<span>·</span>Storyteller<span>·</span>Maker
+                    <span>·</span>Bengaluru
+                </div>
+            </div>
+            <div class="cv-strip-cta">
+                <span class="cv-strip-label">open full cv</span>
+                <span class="cv-strip-arrow">→</span>
+            </div>
+        </div>
+    </a>
 
     <!-- CURRENTLY -->
     <div class="section-marker">

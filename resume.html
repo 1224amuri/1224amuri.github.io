@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jagrut Amuri — CV</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #1c1c1a;
+            --paper: #f4f0e8;
+            --moss: #2e6b3e;
+            --lichen: #5a9e6f;
+            --spore: #8ecfa0;
+            --rust: #c0431a;
+            --amber: #d4832a;
+            --clay: #c96044;
+            --teal: #1e7a72;
+            --violet: #6b3fa0;
+            --sand: #e8d5b7;
+            --forest: #0f2e1e;
+            --dusk: #3d4f5c;
+            --mist: #e5e9ec;
+            --grid: rgba(46, 107, 62, 0.09);
+            --mono: 'Space Mono', monospace;
+            --serif: 'Lora', serif;
+            --frag: 'Fragment Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--paper);
+            color: var(--ink);
+            font-family: var(--serif);
+            min-height: 100vh;
+            overflow-x: hidden;
+            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath d='M4 2 L4 16 L8 12 L11 18 L13 17 L10 11 L16 11 Z' fill='%239e4a2a' stroke='%23f4f0e8' stroke-width='1' stroke-linejoin='round'/%3E%3C/svg%3E") 4 2, auto;
+        }
+
+        /* Grain overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.4;
+        }
+
+        /* Grid background */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .page {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem 6rem;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(244, 240, 232, 0.92);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(61, 92, 58, 0.15);
+        }
+
+        .nav-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0.9rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: var(--moss);
+            text-decoration: none;
+            letter-spacing: 0.08em;
+            opacity: 0.85;
+            transition: opacity 0.2s;
+        }
+        .nav-logo:hover { opacity: 1; }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            font-family: var(--frag);
+            font-size: 0.72rem;
+            color: var(--forest);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            text-transform: lowercase;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--rust);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover { color: var(--moss); }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* ── HEADER ── */
+        .header {
+            padding: 7rem 0 3rem;
+            border-bottom: 2px solid var(--moss);
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 2rem;
+            align-items: end;
+            opacity: 0;
+            animation: fadeInUp 0.7s ease 0.1s forwards;
+        }
+
+        .header-left {}
+
+        .header-tag {
+            font-family: var(--frag);
+            font-size: 0.68rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--rust);
+            margin-bottom: 0.8rem;
+        }
+
+        .header-name {
+            font-family: var(--mono);
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 700;
+            color: var(--forest);
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 0.6rem;
+        }
+
+        .header-title {
+            font-family: var(--serif);
+            font-size: 1rem;
+            color: var(--dusk);
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .header-contact {
+            text-align: right;
+        }
+
+        .contact-item {
+            font-family: var(--frag);
+            font-size: 0.72rem;
+            color: var(--moss);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.4rem;
+            line-height: 1.6;
+        }
+
+        .contact-item a {
+            color: var(--moss);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-item a:hover { color: var(--rust); }
+
+        /* ── STATEMENT ── */
+        .statement {
+            padding: 2.5rem 0;
+            border-bottom: 1px solid rgba(61, 92, 58, 0.2);
+            opacity: 0;
+            animation: fadeInUp 0.7s ease 0.25s forwards;
+        }
+
+        .statement p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--ink);
+            max-width: 680px;
+        }
+
+        .statement p em {
+            color: var(--rust);
+            font-style: italic;
+        }
+
+        /* ── MAIN LAYOUT ── */
+        .cv-body {
+            display: grid;
+            grid-template-columns: 1fr 260px;
+            gap: 0;
+            align-items: start;
+        }
+
+        /* ── SECTIONS ── */
+        .main-col {
+            padding-right: 3rem;
+            border-right: 1px solid rgba(61, 92, 58, 0.2);
+        }
+
+        .side-col {
+            padding-left: 2rem;
+        }
+
+        .section {
+            padding: 2.5rem 0;
+            border-bottom: 1px solid rgba(61, 92, 58, 0.15);
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-label {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--rust);
+            margin-bottom: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(158, 74, 42, 0.25);
+        }
+
+        /* ── TIMELINE ENTRIES ── */
+        .entry {
+            display: grid;
+            grid-template-columns: 72px 1fr;
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .entry:last-child { margin-bottom: 0; }
+
+        .entry-year {
+            font-family: var(--frag);
+            font-size: 0.68rem;
+            color: var(--lichen);
+            letter-spacing: 0.05em;
+            padding-top: 0.2rem;
+            text-align: right;
+            line-height: 1.5;
+        }
+
+        .entry-dot-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 0.4rem;
+        }
+
+        .entry-body {
+            position: relative;
+        }
+
+        .entry-role {
+            font-family: var(--mono);
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--forest);
+            letter-spacing: -0.01em;
+            margin-bottom: 0.2rem;
+        }
+
+        .entry-org {
+            font-family: var(--frag);
+            font-size: 0.7rem;
+            color: var(--moss);
+            letter-spacing: 0.06em;
+            margin-bottom: 0.7rem;
+        }
+
+        .entry-bullets {
+            list-style: none;
+            padding: 0;
+        }
+
+        .entry-bullets li {
+            font-family: var(--serif);
+            font-size: 0.88rem;
+            line-height: 1.7;
+            color: var(--dusk);
+            padding-left: 1rem;
+            position: relative;
+            margin-bottom: 0.3rem;
+        }
+
+        .entry-bullets li::before {
+            content: '·';
+            position: absolute;
+            left: 0;
+            color: var(--amber);
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        /* Timeline connector */
+        .timeline-connector {
+            position: relative;
+        }
+
+        .timeline-connector::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 1.8rem;
+            bottom: -2.2rem;
+            width: 1px;
+            background: linear-gradient(to bottom, var(--spore), transparent);
+            transform: translateX(-50%);
+        }
+
+        .timeline-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--rust);
+            border: 2px solid var(--paper);
+            outline: 1px solid var(--rust);
+            margin-top: 0.25rem;
+            flex-shrink: 0;
+        }
+
+        /* ── SIDE SECTIONS ── */
+        .side-section {
+            padding: 2.5rem 0;
+            border-bottom: 1px solid rgba(61, 92, 58, 0.12);
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .side-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .side-section:last-child { border-bottom: none; }
+
+        .side-label {
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--rust);
+            margin-bottom: 1.2rem;
+        }
+
+        .edu-degree {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--forest);
+            margin-bottom: 0.2rem;
+        }
+
+        .edu-school {
+            font-family: var(--frag);
+            font-size: 0.68rem;
+            color: var(--moss);
+            margin-bottom: 0.15rem;
+        }
+
+        .edu-years {
+            font-family: var(--frag);
+            font-size: 0.65rem;
+            color: var(--lichen);
+            margin-bottom: 0.8rem;
+        }
+
+        .edu-courses {
+            list-style: none;
+        }
+
+        .edu-courses li {
+            font-family: var(--serif);
+            font-size: 0.78rem;
+            color: var(--dusk);
+            line-height: 1.65;
+            padding-left: 0.8rem;
+            position: relative;
+        }
+
+        .edu-courses li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--spore);
+            font-size: 0.7rem;
+        }
+
+        /* Interest cards */
+        .interests-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+
+        .interest-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.65rem 0.8rem;
+            background: var(--card-bg);
+            border-left: 3px solid var(--card-accent);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .interest-card:hover {
+            transform: translateX(3px);
+            box-shadow: -3px 0 0 var(--card-accent);
+        }
+
+        .interest-icon {
+            font-size: 1rem;
+            color: var(--card-accent);
+            flex-shrink: 0;
+            line-height: 1.4;
+            min-width: 1.2rem;
+            text-align: center;
+        }
+
+        .interest-text {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .interest-text strong {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--card-accent);
+            letter-spacing: 0.02em;
+        }
+
+        .interest-text span {
+            font-family: var(--serif);
+            font-size: 0.78rem;
+            color: var(--dusk);
+            line-height: 1.5;
+        }
+
+        /* Links */
+        .links-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .link-item {
+            font-family: var(--frag);
+            font-size: 0.68rem;
+            letter-spacing: 0.05em;
+            color: var(--moss);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .link-item:hover { color: var(--rust); }
+
+        .link-item::before {
+            content: '↗';
+            font-size: 0.7rem;
+            color: var(--amber);
+        }
+
+        /* ── DOWNLOAD BUTTON ── */
+        .download-bar {
+            padding: 1.5rem 0 0;
+            opacity: 0;
+            animation: fadeInUp 0.7s ease 0.4s forwards;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.12em;
+            text-transform: lowercase;
+            color: var(--paper);
+            background: var(--forest);
+            padding: 0.65rem 1.3rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: background 0.25s, transform 0.15s;
+        }
+
+        .download-btn:hover {
+            background: var(--moss);
+            transform: translateY(-1px);
+        }
+
+        .download-btn svg {
+            width: 13px;
+            height: 13px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            margin-top: 4rem;
+            padding: 1.5rem 0;
+            border-top: 1px solid rgba(61, 92, 58, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-note {
+            font-family: var(--frag);
+            font-size: 0.65rem;
+            color: var(--lichen);
+            letter-spacing: 0.08em;
+        }
+
+        .footer-back {
+            font-family: var(--frag);
+            font-size: 0.65rem;
+            color: var(--moss);
+            letter-spacing: 0.08em;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-back:hover { color: var(--rust); }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 720px) {
+            .header {
+                grid-template-columns: 1fr;
+            }
+            .header-contact {
+                text-align: left;
+            }
+            .cv-body {
+                grid-template-columns: 1fr;
+            }
+            .main-col {
+                padding-right: 0;
+                border-right: none;
+                border-bottom: 1px solid rgba(61, 92, 58, 0.2);
+            }
+            .side-col {
+                padding-left: 0;
+            }
+            .entry {
+                grid-template-columns: 60px 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-inner">
+            <a class="nav-logo" href="index.html">← nonsensei</a>
+            <div class="nav-links">
+                <a href="portfolio.html">portfolio</a>
+                <a href="art.html">art</a>
+                <a href="simulations.html">simulations</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page">
+
+        <header class="header">
+            <div class="header-left">
+                <p class="header-tag">curriculum vitae</p>
+                <h1 class="header-name">Jagrut Amuri</h1>
+                <p class="header-title">Biologist · Storyteller</p>
+            </div>
+            <div class="header-contact">
+                <p class="contact-item"><a href="mailto:1224amuri@gmail.com">1224amuri@gmail.com</a></p>
+                <p class="contact-item">+91 97315 21968</p>
+                <p class="contact-item"><a href="https://nonsensei.in" target="_blank">nonsensei.in</a></p>
+            </div>
+        </header>
+
+        <div class="statement">
+            <p>As a passionate student of <em>systems of life</em>, my journey is fuelled by unearthing and studying the multitude of unique adaptations of Earth's life forms. These stories are a mosaic of mystery, devotion, tragedy, resilience and triumph, unfolding across eons. I believe that by sharing these journeys, we can nurture a deeper connection towards each other and raise awareness of our place in the vast web of life we are all part of.</p>
+        </div>
+
+        <div class="download-bar">
+            <a href="Resume_2026_January.pdf" download class="download-btn">
+                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                download pdf
+            </a>
+        </div>
+
+        <div class="cv-body">
+
+            <!-- MAIN COLUMN -->
+            <div class="main-col">
+
+                <div class="section">
+                    <p class="section-label">experience</p>
+
+                    <!-- Visiting Faculty -->
+                    <div class="entry">
+                        <div class="entry-year">2025–26</div>
+                        <div class="entry-body">
+                            <div class="entry-role" style="color: var(--violet);">Visiting Faculty</div>
+                            <div class="entry-org">Srishti Manipal Institute · Azim Premji University</div>
+                            <ul class="entry-bullets">
+                                <li>Facilitated an interdisciplinary design workshop integrating narrative structures, sensory experience, and digital interaction.</li>
+                                <li>Developed facilitation and assessment frameworks emphasising reflective learning and creative exploration across visual, sonic, and movement-based media.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Science Gallery -->
+                    <div class="entry">
+                        <div class="entry-year">2024–25</div>
+                        <div class="entry-body">
+                            <div class="entry-role" style="color: var(--teal);">Mediator</div>
+                            <div class="entry-org">Science Gallery Bengaluru</div>
+                            <ul class="entry-bullets">
+                                <li>Facilitated meaningful engagement between visitors and exhibitions, accounting for diverse predispositions and knowledge backgrounds.</li>
+                                <li>Led Student Learning Experiences (SLEs) for ages 12–25, designing tailored walkthroughs and interactive activities.</li>
+                                <li>Studied informal learning spaces across multiple perspectives — facilitation, workshops, student learning, and exhibition materials.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- OurRiver -->
+                    <div class="entry">
+                        <div class="entry-year">2024</div>
+                        <div class="entry-body">
+                            <div class="entry-role" style="color: var(--moss);">Research Associate</div>
+                            <div class="entry-org">OurRiver OurLife</div>
+                            <ul class="entry-bullets">
+                                <li>Conducted biodiversity surveys along 30 km of the Khandepar River to document fauna diversity and identify key habitats.</li>
+                                <li>Facilitated art workshops along the Khandepar/Mahdei River to engage communities and integrate traditional knowledge into conservation strategies.</li>
+                                <li>Drafting a Conservation Report on best practices informed by local value systems.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Spinfinity -->
+                    <div class="entry">
+                        <div class="entry-year">2023–24</div>
+                        <div class="entry-body">
+                            <div class="entry-role" style="color: var(--amber);">STEM Educator</div>
+                            <div class="entry-org">Spinfinity · Naxxatra</div>
+                            <ul class="entry-bullets">
+                                <li>Designed and implemented hands-on workshops on Evolution and Biomimicry for high school classrooms, incorporating Nature's Principles and AskNature workflows.</li>
+                                <li>Co-conducted 'Origami in Nature' workshops in government schools.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Swim Instructor -->
+                    <div class="entry">
+                        <div class="entry-year">2022–23</div>
+                        <div class="entry-body">
+                            <div class="entry-role" style="color: var(--teal);">Swim Instructor</div>
+                            <div class="entry-org">Scooled / Schooled Sports</div>
+                            <ul class="entry-bullets">
+                                <li>Taught students aged 4–60 using scientific principles of buoyancy, propulsion, and drag.</li>
+                                <li>Adapted communication of concepts to individual students' predispositions and learning styles.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- ReefWatch -->
+                    <div class="entry">
+                        <div class="entry-year">2022</div>
+                        <div class="entry-body">
+                            <div class="entry-role" style="color: var(--moss);">Naturalist</div>
+                            <div class="entry-org">ReefWatch Marine Conservation — Andaman</div>
+                            <ul class="entry-bullets">
+                                <li>Created and delivered a talk on Biomimicry, connecting concepts to the native flora and fauna of the Andamans.</li>
+                                <li>Led 'Nature Walks' showcasing Biomimicry principles across local ecosystems.</li>
+                                <li>Conducted hands-on art workshops in local schools to foster ecosystem awareness.</li>
+                                <li>Edited and captioned social media content for the Chidiyatapu base.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- ASU Research -->
+                    <div class="entry">
+                        <div class="entry-year">2019–21</div>
+                        <div class="entry-body">
+                            <div class="entry-role" style="color: var(--rust);">Research Assistant & Anatomy Lab TA</div>
+                            <div class="entry-org">Arizona State University</div>
+                            <ul class="entry-bullets">
+                                <li>Studied emergence of complex social behaviours like foraging and mating in leaderless groups (eusocial insects).</li>
+                                <li>Researched foraging variation in <em>Temnothorax rugatulus</em> ants; co-presented findings at the Annual Evolutionary Biology Conference.</li>
+                                <li>Prepared weekly materials, dissected and labelled vertebrate systems, and created practical exams for a lab of 20 undergraduates, averaging Grade B+.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div><!-- /section -->
+
+            </div><!-- /main-col -->
+
+            <!-- SIDE COLUMN -->
+            <div class="side-col">
+
+                <div class="side-section">
+                    <p class="side-label">education</p>
+                    <div class="edu-degree">BSc Biological Sciences</div>
+                    <div class="edu-school">Arizona State University</div>
+                    <div class="edu-years">2017 – 2021</div>
+                    <ul class="edu-courses">
+                        <li>Animal Behaviour (Eusocial Insects)</li>
+                        <li>Marine Conservation Science</li>
+                        <li>Vertebrate Zoology</li>
+                        <li>Animal Physiology</li>
+                        <li>Behavioral Ecology</li>
+                    </ul>
+                </div>
+
+                <div class="side-section">
+                    <p class="side-label">interests</p>
+                    <div class="interests-grid">
+
+                        <div class="interest-card" style="--card-accent: #2e6b3e; --card-bg: rgba(46,107,62,0.08);">
+                            <div class="interest-icon">◈</div>
+                            <div class="interest-text">
+                                <strong>Origami</strong>
+                                <span>Spirals, tessellations & nature's geometry in paper</span>
+                            </div>
+                        </div>
+
+                        <div class="interest-card" style="--card-accent: #1e7a72; --card-bg: rgba(30,122,114,0.08);">
+                            <div class="interest-icon">〜</div>
+                            <div class="interest-text">
+                                <strong>Swimming</strong>
+                                <span>Competitive since age 8 · 100+ state & national medals</span>
+                            </div>
+                        </div>
+
+                        <div class="interest-card" style="--card-accent: #6b3fa0; --card-bg: rgba(107,63,160,0.08);">
+                            <div class="interest-icon">◉</div>
+                            <div class="interest-text">
+                                <strong>Breathwork & Yoga</strong>
+                                <span>Practitioner & guide</span>
+                            </div>
+                        </div>
+
+                        <div class="interest-card" style="--card-accent: #c0431a; --card-bg: rgba(192,67,26,0.08);">
+                            <div class="interest-icon">△</div>
+                            <div class="interest-text">
+                                <strong>Trekking</strong>
+                                <span>Sierras (California) · Himalayas</span>
+                            </div>
+                        </div>
+
+                        <div class="interest-card" style="--card-accent: #d4832a; --card-bg: rgba(212,131,42,0.08);">
+                            <div class="interest-icon">∞</div>
+                            <div class="interest-text">
+                                <strong>Flow Arts</strong>
+                                <span>Dapo star, poi & staff · rhythm & lines</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div><!-- /side-col -->
+
+        </div><!-- /cv-body -->
+
+        <footer>
+            <span class="footer-note">© 2026 Jagrut Amuri · always growing · never finished</span>
+            <a class="footer-back" href="index.html">back to garden ↩</a>
+        </footer>
+
+    </div><!-- /page -->
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+
+        document.querySelectorAll('.section, .side-section').forEach(el => observer.observe(el));
+    </script>
+
+</body>
+</html>
