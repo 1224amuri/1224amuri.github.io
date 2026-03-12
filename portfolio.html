@@ -490,11 +490,11 @@
         }
 
         .practice.mediation {
-            background: linear-gradient(to bottom, var(--color-mist), var(--color-paper));
+            background: var(--color-paper));
         }
 
         .practice.ecology {
-            background: linear-gradient(to bottom, var(--color-paper), var(--color-mist));
+            background: var(--color-paper));
         }
 
         .practice-intro {
@@ -779,6 +779,166 @@
                 font-size: 0.8rem;
             }
         }
+
+        /* ── PRACTICE LEVEL ACCORDION ── */
+        .practice {
+            position: relative;
+        }
+
+        .practice-header {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .practice-header-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            gap: 1rem;
+            margin-bottom: var(--space-md);
+        }
+
+        .practice-toggle {
+            position: absolute;
+            right: 10rem;
+            top: var(--space-2xl);
+            width: 38px;
+            height: 38px;
+            border-radius: 4px;
+            background: var(--color-forest);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.25s;
+            z-index: 2;
+        }
+
+        .practice-toggle::before {
+            content: '';
+            display: block;
+            width: 10px;
+            height: 10px;
+            border-right: 2.5px solid white;
+            border-bottom: 2.5px solid white;
+            transform: rotate(45deg) translate(-1px, -2px);
+            transition: transform 0.35s ease;
+        }
+
+        .practice-header:hover .practice-toggle {
+            background: var(--color-moss);
+        }
+
+        .practice-open .practice-toggle {
+            background: var(--color-clay);
+        }
+
+        .practice-open .practice-toggle::before {
+            transform: rotate(225deg) translate(-1px, -2px);
+        }
+
+        /* Practice body collapsed by default */
+        .practice-body {
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.6s ease, opacity 0.4s ease;
+        }
+
+        .practice-open .practice-body {
+            max-height: 12000px;
+            opacity: 1;
+        }
+
+        /* ── ACCORDION ── */
+        .project-header,
+        .ecology-project .project-header {
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1.5rem;
+            user-select: none;
+        }
+
+        .project-header-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .project-header:hover .project-title,
+        .ecology-project .project-header:hover .project-title {
+            color: var(--color-moss);
+            transition: color 0.2s;
+        }
+
+        .accordion-toggle {
+            flex-shrink: 0;
+            width: 38px;
+            height: 38px;
+            border-radius: 4px;
+            background: var(--color-forest);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+            transition: background 0.25s, transform 0.35s ease;
+            color: white;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        /* Chevron arrow using CSS — no text */
+        .accordion-toggle::before {
+            content: '';
+            display: block;
+            width: 10px;
+            height: 10px;
+            border-right: 2.5px solid white;
+            border-bottom: 2.5px solid white;
+            transform: rotate(45deg) translate(-1px, -2px);
+            transition: transform 0.35s ease;
+        }
+
+        .project-header:hover .accordion-toggle {
+            background: var(--color-moss);
+        }
+
+        .accordion-open .accordion-toggle {
+            background: var(--color-clay);
+        }
+
+        .accordion-open .accordion-toggle::before {
+            transform: rotate(225deg) translate(-1px, -2px);
+        }
+
+        /* Collapsed by default */
+        .project-content,
+        .ecology-content {
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            margin-top: 0;
+            transition: max-height 0.5s ease, opacity 0.35s ease, margin-top 0.3s ease;
+        }
+
+        /* Expanded state */
+        .accordion-open .project-content,
+        .accordion-open .ecology-content {
+            max-height: 4000px;
+            opacity: 1;
+            margin-top: var(--space-md);
+        }
+
+        /* Suppress hover-lift unless open */
+        .project:hover {
+            transform: none;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+        }
+
+        .accordion-open.project:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.12);
+        }
     </style>
 </head>
 <body>
@@ -882,10 +1042,15 @@
     </section>
 
     <section id="work" class="practice">
+        <div class="practice-toggle"></div>
         <div class="container">
-            <div class="practice-intro">
-                <span class="section-label">Practice I</span>
-                <h2 class="section-title">Workshops</h2>
+            <div class="practice-intro practice-header">
+                <div class="practice-header-top">
+                    <div>
+                        <span class="section-label">Practice I</span>
+                        <h2 class="section-title">Workshops</h2>
+                    </div>
+                </div>
                 <p class="lead-text">
                     I use workshops as a way to bridge together different ways of knowing, rather than treating learning as information transfer. They are designed as participatory spaces where people move between engaging with the content and each other.
                 </p>
@@ -893,6 +1058,7 @@
                    Across varied contexts, workshops have become a practical method for enabling shifts in perspective and shared inquiry.
                 </p>
             </div>
+            <div class="practice-body">
             <div class="practice-image">
                 <img src="images/Practice_1.jpeg" alt="Workshop practice">
             </div>
@@ -900,12 +1066,15 @@
             <div class="projects">
                 <div class="project">
                     <div class="project-header">
+                        <div class="project-header-text">
                         <h3 class="project-title">Origami × Nature</h3>
                         <div class="project-meta">
                             <span>Science Gallery Bengaluru</span>
                             <span>•</span>
                             <span>School kids, General Public & Undergraduates</span>
                         </div>
+                    </div>
+                    <div class="accordion-toggle"></div>
                     </div>
                     <div class="project-content">
                         <p class="project-bridge">
@@ -923,12 +1092,15 @@
 
                 <div class="project">
                     <div class="project-header">
+                        <div class="project-header-text">
                         <h3 class="project-title">Visual Narrative</h3>
                         <div class="project-meta">
                             <span>Srishti Manipal Institute</span>
                             <span>•</span>
                             <span>Undergraduate Students</span>
                         </div>
+                    </div>
+                    <div class="accordion-toggle"></div>
                     </div>
                     <div class="project-content">
                         <p class="project-bridge">
@@ -947,12 +1119,15 @@
 
                 <div class="project">
                     <div class="project-header">
+                        <div class="project-header-text">
                         <h3 class="project-title">Biomimicry</h3>
                         <div class="project-meta">
                             <span>Andaman Islands - ReefWatch</span>
                             <span>•</span>
                             <span>Government School Students</span>
                         </div>
+                    </div>
+                    <div class="accordion-toggle"></div>
                     </div>
                     <div class="project-content">
                         <p class="project-bridge">
@@ -969,12 +1144,15 @@
 
                 <div class="project">
                     <div class="project-header">
+                        <div class="project-header-text">
                         <h3 class="project-title">Art × River</h3>
                         <div class="project-meta">
                             <span>Khandepar–Mahdei River, Goa</span>
                             <span>•</span>
                             <span>Community Workshops</span>
                         </div>
+                    </div>
+                    <div class="accordion-toggle"></div>
                     </div>
                     <div class="project-content">
                         <p class="project-bridge">
@@ -991,14 +1169,20 @@
                     </div>
                 </div>
             </div>
+            </div><!-- close practice-body -->
         </div>
     </section>
 
     <section class="practice mediation">
+        <div class="practice-toggle"></div>
         <div class="container">
-            <div class="practice-intro">
-                <span class="section-label">Practice II</span>
-                <h2 class="section-title">Mediation</h2>
+            <div class="practice-intro practice-header">
+                <div class="practice-header-top">
+                    <div>
+                        <span class="section-label">Practice II</span>
+                        <h2 class="section-title">Mediation</h2>
+                    </div>
+                </div>
                 <p class="lead-text">
                     Mediation at Science Gallery is a form of informal education, where mediators support visitors in engaging with exhibits through conversation.
                 </p>
@@ -1007,6 +1191,7 @@
 					I tried to stay responsive, allowing learning to grow through dialogue and proximity with the objects.
            		</p>
             </div>
+            <div class="practice-body">
             <div class="practice-image">
                 <img src="images/Practice_2.jpeg" alt="Mediation practice">
             </div>
@@ -1014,12 +1199,15 @@
             <div class="projects">
                 <div class="project">
                     <div class="project-header">
+                        <div class="project-header-text">
                         <h3 class="project-title">Everyday Mediation</h3>
                         <div class="project-meta">
                             <span>Science Gallery Bengaluru</span>
                             <span>•</span>
                             <span>~40,000 visitors</span>
                         </div>
+                    </div>
+                    <div class="accordion-toggle"></div>
                     </div>
                     <div class="project-content">
                         <p class="project-bridge">
@@ -1037,12 +1225,15 @@
 
                 <div class="project">
                     <div class="project-header">
+                        <div class="project-header-text">
                         <h3 class="project-title">Student Learning Experiences</h3>
                         <div class="project-meta">
                             <span>Science Gallery Bengaluru</span>
                             <span>•</span>
                             <span>~10,000 students guided</span>
                         </div>
+                    </div>
+                    <div class="accordion-toggle"></div>
                     </div>
                     <div class="project-content">
                         <p class="project-bridge">
@@ -1060,10 +1251,13 @@
 
                 <div class="project">
                     <div class="project-header">
+                        <div class="project-header-text">
                         <h3 class="project-title">Designed Experiences</h3>
                         <div class="project-meta">
                             <span>Science Gallery Bengaluru</span>
                         </div>
+                    </div>
+                    <div class="accordion-toggle"></div>
                     </div>
                     <div class="project-content">
                         <p class="project-bridge">
@@ -1084,10 +1278,13 @@
                 
                 <div class="project">
                     <div class="project-header">
+                        <div class="project-header-text">
                         <h3 class="project-title">Beyond Mediation</h3>
                         <div class="project-meta">
                             <span>Science Gallery Bengaluru</span>
                         </div>
+                    </div>
+                    <div class="accordion-toggle"></div>
                     </div>
                     <div class="project-content">
                         <p class="project-bridge">
@@ -1106,17 +1303,20 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-            </div>
+            </div><!-- close practice-body -->
         </div>
     </section>
 
     <section class="practice ecology">
+        <div class="practice-toggle"></div>
         <div class="container">
-            <div class="practice-intro">
-                <span class="section-label">Practice III</span>
-                <h2 class="section-title">Ecology & Field Work</h2>
+            <div class="practice-intro practice-header">
+                <div class="practice-header-top">
+                    <div>
+                        <span class="section-label">Practice III</span>
+                        <h2 class="section-title">Ecology & Field Work</h2>
+                    </div>
+                </div>
                 <p class="lead-text">
                     My ecological work has been grounded in physical presence - being in forests, rivers and reefs over extended periods. Much of this work unfolded in difficult conditions, requiring empathy and a willingness to learn without clear answers.
                 </p>
@@ -1124,6 +1324,7 @@
                     I have been drawn to roles that sit at the boundary between natural systems and human activity, contributing to conservation efforts while learning how environmental care is shaped by people and institutions. These next projects have fundamentally changed who I am and have heavily influenced how I see the world. These projects have fundamentally changed who I am and heavily influenced how I see the world.
                 </p>
             </div>
+            <div class="practice-body">
             <div class="practice-image">
                 <img src="images/Practice_3.jpeg" alt="Ecology fieldwork">
             </div>
@@ -1131,12 +1332,15 @@
             <div class="ecology-projects">
                 <div class="ecology-project">
                     <div class="project-header">
+                        <div class="project-header-text">
                         <h3 class="project-title">Riparian Ecology & Restoration</h3>
                         <div class="project-meta">
                             <span>Khandepar River, Goa</span>
                             <span>•</span>
                             <span>Our River, Our Life (NGO)</span>
                         </div>
+                    </div>
+                    <div class="accordion-toggle"></div>
                     </div>
                     <div class="ecology-content">
                         <div class="ecology-main">
@@ -1167,12 +1371,15 @@
 
                 <div class="ecology-project">
                     <div class="project-header">
+                        <div class="project-header-text">
                         <h3 class="project-title">Marine Ecology & Restoration</h3>
                         <div class="project-meta">
                             <span>Chidiya Tapu, Andaman Islands</span>
                             <span>•</span>
                             <span>ReefWatch India (NGO)</span>
                         </div>
+                    </div>
+                    <div class="accordion-toggle"></div>
                     </div>
                     <div class="ecology-content">
                         <div class="ecology-main">
@@ -1201,10 +1408,9 @@
                     </div>
                 </div>
             </div>
+            </div><!-- close practice-body -->
         </div>
     </section>
-
-    <section id="next" class="whats-next">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">What's Next?</h2>
@@ -1313,6 +1519,31 @@
                 heroBackground.style.transform = `translateY(${scrolled * 0.5}px)`;
                 heroBackground.style.opacity = 1 - (scrolled / window.innerHeight);
             }
+        });
+
+        // ── PRACTICE LEVEL ACCORDION ──
+        document.querySelectorAll('.practice-header').forEach(header => {
+            header.addEventListener('click', (e) => {
+                if (e.target.closest('.project, .ecology-project')) return;
+                const section = header.closest('.practice');
+                if (section) section.classList.toggle('practice-open');
+            });
+        });
+
+        // Also allow clicking the toggle button itself (sits outside header)
+        document.querySelectorAll('.practice-toggle').forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
+                const section = toggle.closest('.practice');
+                if (section) section.classList.toggle('practice-open');
+            });
+        });
+
+        // ── PROJECT ACCORDION ──
+        document.querySelectorAll('.project-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const card = header.closest('.project, .ecology-project');
+                if (card) card.classList.toggle('accordion-open');
+            });
         });
 
         // Footer easter egg
