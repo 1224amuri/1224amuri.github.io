@@ -8,7 +8,7 @@
     "process": "Started with a pencil sketch of the figure and traced over that with fine liners of different weights. Red circle made with acrylic, painted flat and left to dry. It was a joy to try and find the perfect shade by mixing and experimenting.",
     "inspiration": "Hopi culture and their Kachina dolls. I just loved the expression of the figure, reminiscent of a traveller of the nights.",
     "meaning": "Something about being watched over at night by an entity that slightly unsettles you. The figure isn't doing anything — just being present, looking into you.",
-    "tags": ["folk","ritual", "figure", "ink", "red"],
+    "tags": ["folk","ritual", "figure"],
     "image": "art_images/moon_spirit.jpg",
     "filter": ["fine liner", "acrylic"],
     "series": "Kachina"
@@ -22,13 +22,13 @@
     "process": "Rough pencil sketch traced on with fine liners. Used different hatching techniques to create visual somplexity and depth. I chose a lush deep green to represent the sun.",
     "inspiration": "Hopi culture and their Kachina dolls. They usually have feline features and the sun spirit looked particularly playful just floating around",
     "meaning": "To me, they respresent the will of life, radiating out.",
-    "tags": ["folk","ritual", "figure", "ink", "deep green"],
+    "tags": ["folk","ritual", "figure"],
     "image": "art_images/sun_spirit.jpg",
     "filter": ["fine liner","acrylic"],
     "series": "Kachina"
   },
   {
-    "title": "Madhubani_1",
+    "title": "Tree of LIfe",
     "medium": "fine liner · acrylic markers ",
     "year": "2026",
     "dimensions": "A4",
@@ -36,10 +36,24 @@
     "process": "Rough pencil sketch of half of the tree made on tracing paper and mirrored on the other side to create symmetry then traced on with fine liners. Used the finest point liner to hatch and dot, somethign I greatly enjoy doing.",
     "inspiration": "Tree of life motif in Pattachitra style of Odisha. Border is a common pattern in Madhubani. The gold represents the 'fruits' of life.",
     "meaning": "It means family and beauty. Projecting our hopes into the future.",
-    "tags": ["folk", "tree of life", "ink", "Pattachitra"],
+    "tags": ["folk", "tree of life","Pattachitra"],
     "image": "art_images/tree_1.jpg",
-    "filter": ["fine liner","acrylic markers"],
+    "filter": ["fine liner","acrylic"],
     "series": "Pattachitra"
+  },
+  {
+    "title": "Taawaventiwa",
+    "medium": "fine liner · acrylic ",
+    "year": "2025",
+    "dimensions": "A4",
+    "description": "A precession of planets, with Taawa - the sun spirit in the center. Tuuwaqatsi (Earth, the Fourth World) travels with Muuyaw - the Moon spirit below. The Hopi people call the 22 Degree Halo sometimes seen circling the sun 'Taawaventiwa', believing to bring light and fertility.",
+    "process": "Sketched out with pencil and traced with fine liner. Used acrylic pens and paints. I took some creative liberties with the colouring illustrating day on the left with dragonflies and night on the right with stars.",
+    "inspiration": "Heavily inspired by Gerald Dawavendewa's series on the Kanchina.",
+    "meaning": "I think it was a fitting 3rd illustration representing the Sun and Moon spirit together.",
+    "tags": ["Kachina", "Sun & Moon", ],
+    "image": "art_images/Night&Day.jpg",
+    "filter": ["fine liner","acrylic"],
+    "series": "Knchina"
   }
   
 ]
