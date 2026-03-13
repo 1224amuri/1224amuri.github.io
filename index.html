@@ -754,7 +754,8 @@
 
 	</div>                              <!-- closes .intro-row -->
 
-    <p class="tree-note">The tree above is a Tabebuia rosea — a Brazilian native that Bangalore adopted as its own. Every March, these trees shed their leaves and erupt into clouds of pink along many of the prominent avenues, briefly turning the city surreal. This is my small homage to that annual spectacle. Over the seasons, I will try to grow trees that have imprinted on me.</p>
+    <p class="tree-note">The tree above is a Tabebuia aurea — the Silver Trumpet Tree, originally from the dry woodlands of South America. There are a few of these right outside my apartment. 
+    Tabebuia aurea has a deeply cracked, furrowed bark, and termites take full advantage of this by building their tunnels into every crevice using the red laterite soil of this part of Bangalore. By the time the flowers arrive, the tree is encased in that earthy red, with no leaves, just clusters of bright saturated yellow on top. I find the palette really pleasing.</p>
    
     <div class="section-marker">
         <span>the patches</span>
@@ -914,18 +915,18 @@ class PlantSystem {
     this.len = 2.6;
     this.angle = 0.13 * p.PI;
     this.angleX = 0.3 * p.PI;
-    this.startHue = 0;
+    this.startHue = 20;
   }
   display() {
     const p = this.p;
     let sWeight = 15;
-    let brightness = 1;
+    let brightness = 19;
     let hue = this.startHue;
     for (let i = 0; i < this.lstr.length; i++) {
       switch(this.lstr[i]) {
         case 'F':
           p.strokeWeight(sWeight);
-          p.stroke(hue, 8, brightness);
+          p.stroke(hue, 100, brightness);
           p.line(0, 0, 0, this.len, 0, 0);
           p.translate(this.len, 0, 0);
           break;
@@ -945,19 +946,17 @@ class PlantSystem {
           break;
         case 'u':
           sWeight *= 0.8;
-          brightness *= 1.5;
-          hue = (hue + 10) % 360;
+          brightness *= 1.15;
           break;
         case 'd':
           sWeight *= (1.0 / 0.8);
-          brightness *= (1.0 / 1.5);
-          hue = ((hue - 10) + 360) % 360;
+          brightness *= (1.0 / 1.15);
           break;
         case 'B':
           p.push();
           p.noStroke();
-          p.fill(338, 65, 100);
-          p.sphere(sWeight * 4);
+          p.fill(51, 94, 100);
+          p.sphere(sWeight * 2);
           p.pop();
           break;
       }
@@ -993,10 +992,8 @@ class PlantSystem {
     this.lstr = newString;
   }
 }
-
 new p5(function(p) {
   let pl;
-
   p.setup = function() {
     const w = window.innerWidth < 640 ? Math.min(window.innerWidth - 40, 360) : 360;
     const h = window.innerWidth < 640 ? Math.round(w * 1.2) : 480;
@@ -1005,7 +1002,6 @@ new p5(function(p) {
     p.colorMode(p.HSB, 360, 100, 100);
     pl = new PlantSystem(p);
   };
-
   p.draw = function() {
     p.background('#3d5c3a');
     p.push();
@@ -1019,7 +1015,6 @@ new p5(function(p) {
       pl.expand();
     }
   };
-
   p.windowResized = function() {
     const w = window.innerWidth < 640 ? Math.min(window.innerWidth - 40, 360) : 360;
     const h = window.innerWidth < 640 ? Math.round(w * 1.2) : 480;
