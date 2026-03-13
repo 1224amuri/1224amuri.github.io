@@ -47,8 +47,8 @@
             color: var(--color-ink);
             background-color: var(--color-paper);
             overflow-x: hidden;
-            transform: scale(0.9);  /* ADD THIS LINE */
-    		transform-origin: top center;  /* AND THIS LINE */
+            transform: scale(0.95);  /* ADD THIS LINE */
+    		transform-origin: center;  /* AND THIS LINE */
         }
 
         h1, h2, h3, h4 {
@@ -397,7 +397,8 @@
 
         /* About Section */
         .about {
-            background: linear-gradient(to bottom, var(--color-paper), var(--color-mist));
+            background: var(--color-paper);
+            padding: var(--space-md) 0;
         }
 
         .about-content {
@@ -426,6 +427,7 @@
         .principles {
             background: var(--color-forest);
             color: var(--color-paper);
+            padding: var(--space-md) 0;
         }
 
         .principles .section-label {
@@ -440,11 +442,11 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: var(--space-lg);
-            margin-top: var(--space-xl);
+            margin-top: var(--space-md);
         }
 
         .principle-card {
-            padding: var(--space-lg);
+            padding: var(--space-md);
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
@@ -460,16 +462,15 @@
 
         .principle-card:hover {
             background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-5px);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
 
         .principle-number {
             font-family: var(--font-display);
-            font-size: 3rem;
+            font-size: 2rem;
             font-weight: 900;
             color: var(--color-sage);
-            margin-bottom: var(--space-sm);
+            margin-bottom: var(--space-xs);
             opacity: 0.5;
         }
 
@@ -483,12 +484,27 @@
             color: var(--color-mist);
             margin-bottom: var(--space-sm);
         }
+        
+        #work {
+    		margin-top: var(--space-lg);
+		}
 
         /* Practice Sections */
-        .practice {
-            background: var(--color-paper);
-        }
-
+       .practice {
+    		position: relative;
+    		border: 1.5px solid var(--color-sage);
+    		border-radius: 6px;
+    		padding: var(--space-md);
+    		margin-bottom: var(--space-md);
+    		transition: all 0.4s ease;
+    		background: white;
+		}
+		
+		.practice:hover {
+   			border-color: var(--color-moss);
+    		box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    		transform: translateY(-5px);
+		}
         .practice.mediation {
             background: var(--color-paper));
         }
@@ -499,7 +515,7 @@
 
         .practice-intro {
             max-width: 800px;
-            margin-bottom: var(--space-xl);
+            margin-bottom: var(--space-sm);
         }
 
         .practice-intro .section-label {
@@ -524,14 +540,13 @@
             gap: var(--space-xl);
         }
 
-        .project {
+        .project,
+        .ecology-project {
             padding: var(--space-lg);
-            background: white;
+            background: rgba(255, 255, 255, 1);
             border-left: 4px solid var(--color-moss);
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
             transition: all 0.4s ease;
-            opacity: 0;
-            transform: translateY(30px);
         }
 
         .project.visible {
@@ -642,6 +657,7 @@
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: var(--space-lg);
             margin-top: var(--space-lg);
+            align-items: stretch;
         }
 
         .next-project {
@@ -654,6 +670,7 @@
             overflow: hidden;
             opacity: 0;
             transform: translateY(30px);
+            height: 100%;
         }
 
         .next-project.visible {
@@ -661,18 +678,6 @@
             transform: translateY(0);
         }
 
-        .next-project::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--color-moss), var(--color-clay));
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s ease;
-        }
 
         .next-project:hover::before {
             transform: scaleX(1);
@@ -755,6 +760,11 @@
             section {
                 padding: var(--space-xl) 0;
             }
+            
+			.practice {
+    			padding: var(--space-md) 0;
+			}
+            
 
             .project-images {
                 grid-template-columns: 1fr;
@@ -801,7 +811,7 @@
         .practice-toggle {
             position: absolute;
             right: 10rem;
-            top: var(--space-2xl);
+            top: var(--space-md));
             width: 38px;
             height: 38px;
             border-radius: 4px;
@@ -933,11 +943,13 @@
         .project:hover {
             transform: none;
             box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            background: white;
         }
 
         .accordion-open.project:hover {
             transform: translateX(5px);
             box-shadow: 0 4px 30px rgba(0,0,0,0.12);
+            background: white;
         }
     </style>
 </head>
@@ -1071,7 +1083,9 @@
                         <div class="project-meta">
                             <span>Science Gallery Bengaluru</span>
                             <span>•</span>
-                            <span>School kids, General Public & Undergraduates</span>
+                            <span>Azim Premji University</span>
+                            <span>•</span>
+                        	<span>RGH School</span>
                         </div>
                     </div>
                     <div class="accordion-toggle"></div>
@@ -1085,7 +1099,9 @@
                             <img src="images/Origami_3.jpeg" alt="Origami nature forms">
                         </div>
                         <p>
-                            Participants folded paper into DNA, tessellations, and seed-like forms inspired by natural structures. Origami became a way to notice how simple constraints give rise to complex form, function elegantly in nature.
+                            Participants observed patterns and forms in nature, then translated those observations into folded paper — working through spirals, tessellations, and flight mechanics with their hands. 
+                            By understanding how and why natural structures such as insect wings and leaves fold, we explored how shape, function, and movement can emerge from simple rules, experimenting with multiple folding approaches along the way. 
+                            Origami became a way to notice how nature uses the principles of folding to solve complex problems, elegantly. 
                         </p>
                     </div>
                 </div>
@@ -1111,8 +1127,13 @@
                             <img src="images/Srishti_2.jpeg" alt="Narrative exploration">
                         </div>
                         <p>
-                            Explored storytelling through images, objects, sound, movement, and space, translating the same narrative across different forms. This two week workshop reframed narrative as things we actively construct, not just consume, restoring agency through making 
-                            and interpretation. 
+                            This two-week, full-day workshop on visual narratives was designed and co-facilitated for second-year undergraduate students at Srishti Manipal University, developed with only three days of lead time and an open-ended brief. 
+                            The workshop took shape iteratively, adapting day by day in response to the group, with assessment growing directly out of student work and prioritising reflection and process over conventional evaluation. 
+                        </p>
+                        <p>
+                            We began by sharing personal stories and examining how narratives shape meaning, before tracing the roots of visual storytelling and exploring its cognitive dimensions. 
+                            We broke down the anatomy of a story and investigated how its elements translate across different design contexts — working through sound, music, and text as visual mediums, and using objects, origami, and stop-motion to animate ideas. 
+                            Movement and gesture opened up questions of embodied and non-verbal communication, and the workshop culminated in final projects where each student translated a chosen narrative into a photo series.
                         </p>
                     </div>
                 </div>
@@ -1137,7 +1158,11 @@
                             <img src="images/Biomimicry_1.jpeg" alt="Biomimicry workshop">
                         </div>
                         <p>
-                            Students explored intertidal and forest ecosystems, observing organisms and discussing how they survive and adapt. Biomimicry became a way to notice that sophisticated problem-solving already exists all around us.
+                            This workshop was designed and conducted while volunteering with Reefwatch, a marine conservation organisation, on the southernmost tip of the Andaman Islands in a place called Chidiyatapu — built for government school students to help deepen their understanding of their surroundings. 
+                            We walked through intertidal zones and coastal areas, observing organisms in their natural habitats, identifying species, and discussing how they function. Conversations moved between ecology and adaptation — exploring how animals manage heat, salinity, and movement. 
+                         </p>
+                        <p>  
+                            Students drew their favourite organisms, picked out their most distinctive traits, and began thinking about how specific biological abilities might translate into human use. Biomimicry became a way to notice that sophisticated problem-solving already exists all around us.
                         </p>
                     </div>
                 </div>
@@ -1164,7 +1189,10 @@
                             <img src="images/River_3.jpeg" alt="Community engagement">
                         </div>
                         <p>
-                            Participants walked the riverbanks, identified plants, shared stories, and created zines using local materials. The workshops created space for intergenerational knowledge exchange, where conservation emerged from dialogue, and lived relationships with the river..
+                            These workshops were conducted across multiple locations along the Khandepar–Mahdei River in Goa, in collaboration with Bookworm Trust and OurRiver OurLife as part of a larger conservation efforts in Goa. As part of the on-ground team, I was simultaneously conducting field surveys and designing and facilitating community workshops alongside local libraries. 
+                            We walked the river with field experts, identifying plants and species while weaving in traditional and lived knowledge that participants brought with them. Zines and artworks made from leaves, mud, and sand became a way of processing what we observed, and conversations opened up around local socio-ecological pressures like sand mining, fishing practices and the slow changes people had witnessed over lifetimes. 
+                            Much of the work was simply about listening: exchanging stories across generations, asking questions, and spending time with the river together. 
+                            We also introduced simple tools such as a flood monitoring app to support ongoing care and monitoring. 
                         </p>
                     </div>
                 </div>
