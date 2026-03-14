@@ -755,7 +755,8 @@
 	</div>                              <!-- closes .intro-row -->
 
     <p class="tree-note">The tree above is a Tabebuia aurea — the Silver Trumpet Tree, originally from the dry woodlands of South America. There are a few of these right outside my apartment. 
-    Tabebuia aurea has a deeply cracked, furrowed bark, and termites take full advantage of this by building their tunnels into every crevice using the red laterite soil of this part of Bangalore. By the time the flowers arrive, the tree is encased in that earthy red, with no leaves, just clusters of bright saturated yellow on top. I find the palette really pleasing.</p>
+    Tabebuia aurea has a deeply cracked, furrowed bark, and termites take full advantage of this by building their tunnels into every crevice using the red laterite soil of this part of Bangalore. 
+    By the time the flowers arrive, the tree is encased in that earthy red, with no leaves, just clusters of bright saturated yellow on top. I find the palette really pleasing.</p>
    
     <div class="section-marker">
         <span>the patches</span>
@@ -793,7 +794,7 @@
             <span class="patch-index">03</span>
             <div class="patch-label">seeing</div>
             <div class="patch-title">Art</div>
-            <div class="patch-desc">Some of my random sketches/paintings.</div>
+            <div class="patch-desc">Sketches, paintings, gifts.</div>
             <span class="patch-arrow" style="color: var(--spore);">→</span>
         </a>
 
@@ -802,7 +803,7 @@
             <span class="patch-index">04</span>
             <div class="patch-label">folding</div>
             <div class="patch-title">Origami</div>
-            <div class="patch-desc">Paper, form, and the logic of folds. Kinetic sculptures in progress.</div>
+            <div class="patch-desc">Paper, form, and the beauty of folds.</div>
             <span class="patch-arrow" style="color: var(--amber);">→</span>
         </a>
 
@@ -811,14 +812,15 @@
             <span class="patch-index">05</span>
             <div class="terminal-line">$ p5.js <span>— simulating life</span></div>
             <div class="patch-title">Code & Simulations</div>
-            <div class="patch-desc">Boids, slime molds, emergent patterns. Simple rules → complex behavior.</div>
+            <div class="patch-desc">Emergent patterns, secrets of the natural world. Simple rules → complex behavior.</div>
             <span class="patch-arrow" style="color: var(--lichen);">→</span>
         </a>
 
     </div>
 
     <!-- CV FIELD NOTE STRIP -->
-    <a href="resume.html" class="cv-strip">
+  <!-- 
+  <a href="resume.html" class="cv-strip">
         <div class="cv-strip-inner">
             <div class="cv-strip-left">
                 <div class="cv-strip-tag">Curriculum Vitae</div>
@@ -834,6 +836,7 @@
             </div>
         </div>
     </a>
+ -->
 
     <!-- CURRENTLY -->
     <div class="section-marker">
@@ -912,14 +915,14 @@ class PlantSystem {
   constructor(p) {
     this.p = p;
     this.lstr = "S";
-    this.len = 2.6;
-    this.angle = 0.13 * p.PI;
+    this.len = 2.8;
+    this.angle = 0.16 * p.PI;
     this.angleX = 0.3 * p.PI;
     this.startHue = 20;
   }
   display() {
     const p = this.p;
-    let sWeight = 15;
+    let sWeight = 10;
     let brightness = 19;
     let hue = this.startHue;
     for (let i = 0; i < this.lstr.length; i++) {
@@ -956,7 +959,7 @@ class PlantSystem {
           p.push();
           p.noStroke();
           p.fill(51, 94, 100);
-          p.sphere(sWeight * 2);
+          p.sphere(sWeight * 2.8);
           p.pop();
           break;
       }
@@ -971,7 +974,7 @@ class PlantSystem {
           newString += "FB";
           break;
         case 'F':
-          if (p.random(100) < 50) {
+          if (p.random(100) < 42) {
             newString += "FF";
           } else {
             newString += "F";
@@ -1008,7 +1011,7 @@ new p5(function(p) {
     p.translate(0, p.height * 0.5 - 10);
     p.rotate(-0.5 * p.PI);
     p.rotateX(0.01 * p.PI * p.frameCount);
-    p.scale(0.7);
+    p.scale(0.9);
     pl.display();
     p.pop();
     if (p.frameCount < 12) {
