@@ -948,18 +948,18 @@ class PlantSystem {
           p.pop();
           break;
         case 'u':
-          sWeight *= 0.8;
+          sWeight *= 0.75;
           brightness *= 1.15;
           break;
         case 'd':
-          sWeight *= (1.0 / 0.8);
+          sWeight *= (1.0 / 0.75);
           brightness *= (1.0 / 1.15);
           break;
         case 'B':
           p.push();
           p.noStroke();
           p.fill(51, 94, 100);
-          p.sphere(sWeight * 2.8);
+          p.sphere(sWeight * 6);
           p.pop();
           break;
       }
