@@ -129,6 +129,37 @@
     		font-style: italic;
 		}
 
+		.tree-switch {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-top: 0.7rem;
+            font-family: var(--frag);
+            font-size: 0.68rem;
+            color: var(--lichen);
+            letter-spacing: 0.06em;
+        }
+
+        .tree-switch button {
+            background: none;
+            border: 1px solid var(--spore);
+            border-radius: 2px;
+            color: var(--moss);
+            font-family: var(--frag);
+            font-size: 0.7rem;
+            padding: 0.1rem 0.45rem;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .tree-switch button:hover:not(:disabled) { border-color: var(--moss); }
+        .tree-switch button:disabled { opacity: 0.3; cursor: default; }
+
+        #tree-name {
+            font-style: italic;
+            color: var(--moss);
+        }
+
 		.tree-note {
             font-family: var(--serif);
             font-size: 0.85rem;
@@ -726,11 +757,17 @@
     
   <div class="intro-row">
     <div class="intro-graphic">
-    <div id="plant-sim" onclick="location.reload()" style="cursor: pointer;"></div>
+    <div id="plant-sim" style="cursor: pointer;"></div>
     	<div class="sim-caption">
         	L-system · procedural botany<br>
         	<span>Each visit to my small corner of the internet grows a completely unique tree.</span><br>
         	<span style="font-size: 0.65rem; opacity: 0.6; font-style: italic;">↺ click the tree to grow a new one</span>
+    	</div>
+    	<div class="tree-switch">
+        	<button id="tree-prev" aria-label="previous tree">←</button>
+        	<span id="tree-count">02 / 02</span>
+        	<button id="tree-next" aria-label="next tree">→</button>
+        	<span id="tree-name">Tabebuia aurea</span>
     	</div>
 	</div>                  <!-- closes .intro-graphic -->
 
@@ -754,7 +791,7 @@
 
 	</div>                              <!-- closes .intro-row -->
 
-    <p class="tree-note">The tree above is a Tabebuia aurea — the Silver Trumpet Tree, originally from the dry woodlands of South America. There are a few of these right outside my apartment. 
+    <p class="tree-note" id="tree-note">The tree above is a Tabebuia aurea — the Silver Trumpet Tree, originally from the dry woodlands of South America. There are a few of these right outside my apartment. 
     Tabebuia aurea has a deeply cracked, furrowed bark, and termites take full advantage of this by building their tunnels into every crevice using the red laterite soil of this part of Bangalore. 
     By the time the flowers arrive, the tree is encased in that earthy red, with no leaves, just clusters of bright saturated yellow on top. I find the palette really pleasing.</p>
    
@@ -911,35 +948,56 @@
 <script src="https://cdn.jsdelivr.net/npm/p5@1.11.11/lib/p5.min.js"></script>
 <script>
 // ── Plant L-System Simulation ──
+// Each tree is one entry. Oldest first; the page opens on the last one.
+// To add a new tree, copy an entry, change the values, and add it at the end.
+const TREES = [
+  {
+    name: "Tabebuia rosea",
+    note: "The tree above is a Tabebuia rosea — a Brazilian native that Bangalore adopted as its own. Every March, these trees shed their leaves and erupt into clouds of pink along many of the prominent avenues, briefly turning the city surreal. This is my small homage to that annual spectacle. Over the seasons, I will try to grow trees that have imprinted on me.",
+    len: 2.6, angle: 0.13, angleX: 0.3, scale: 0.7,
+    startWeight: 15, startBrightness: 1, startHue: 0, saturation: 8,
+    weightStep: 0.8, brightnessStep: 1.5, hueStep: 10,
+    growChance: 50,
+    blossom: [338, 65, 100], blossomSize: 3.3
+  },
+  {
+    name: "Tabebuia aurea",
+    note: "The tree above is a Tabebuia aurea — the Silver Trumpet Tree, originally from the dry woodlands of South America. There are a few of these right outside my apartment. Tabebuia aurea has a deeply cracked, furrowed bark, and termites take full advantage of this by building their tunnels into every crevice using the red laterite soil of this part of Bangalore. By the time the flowers arrive, the tree is encased in that earthy red, with no leaves, just clusters of bright saturated yellow on top. I find the palette really pleasing.",
+    len: 2.8, angle: 0.16, angleX: 0.3, scale: 0.9,
+    startWeight: 10, startBrightness: 19, startHue: 20, saturation: 100,
+    weightStep: 0.75, brightnessStep: 1.15, hueStep: 0,
+    growChance: 42,
+    blossom: [51, 94, 100], blossomSize: 6
+  }
+];
+
 class PlantSystem {
-  constructor(p) {
+  constructor(p, t) {
     this.p = p;
+    this.t = t;
     this.lstr = "S";
-    this.len = 2.8;
-    this.angle = 0.16 * p.PI;
-    this.angleX = 0.3 * p.PI;
-    this.startHue = 20;
   }
   display() {
-    const p = this.p;
-    let sWeight = 10;
-    let brightness = 19;
-    let hue = this.startHue;
+    const p = this.p, t = this.t;
+    const angle = t.angle * p.PI, angleX = t.angleX * p.PI;
+    let sWeight = t.startWeight;
+    let brightness = t.startBrightness;
+    let hue = t.startHue;
     for (let i = 0; i < this.lstr.length; i++) {
       switch(this.lstr[i]) {
         case 'F':
           p.strokeWeight(sWeight);
-          p.stroke(hue, 100, brightness);
-          p.line(0, 0, 0, this.len, 0, 0);
-          p.translate(this.len, 0, 0);
+          p.stroke(hue, t.saturation, brightness);
+          p.line(0, 0, 0, t.len, 0, 0);
+          p.translate(t.len, 0, 0);
           break;
         case 'l':
-          p.rotate(-this.angle);
-          p.rotateX(-this.angleX);
+          p.rotate(-angle);
+          p.rotateX(-angleX);
           break;
         case 'r':
-          p.rotate(this.angle);
-          p.rotateX(this.angleX);
+          p.rotate(angle);
+          p.rotateX(angleX);
           break;
         case '[':
           p.push();
@@ -948,18 +1006,20 @@ class PlantSystem {
           p.pop();
           break;
         case 'u':
-          sWeight *= 0.75;
-          brightness *= 1.15;
+          sWeight *= t.weightStep;
+          brightness *= t.brightnessStep;
+          hue = (hue + t.hueStep) % 360;
           break;
         case 'd':
-          sWeight *= (1.0 / 0.75);
-          brightness *= (1.0 / 1.15);
+          sWeight /= t.weightStep;
+          brightness /= t.brightnessStep;
+          hue = ((hue - t.hueStep) + 360) % 360;
           break;
         case 'B':
           p.push();
           p.noStroke();
-          p.fill(51, 94, 100);
-          p.sphere(sWeight * 6);
+          p.fill(...t.blossom);
+          p.sphere(sWeight * t.blossomSize);
           p.pop();
           break;
       }
@@ -974,11 +1034,7 @@ class PlantSystem {
           newString += "FB";
           break;
         case 'F':
-          if (p.random(100) < 42) {
-            newString += "FF";
-          } else {
-            newString += "F";
-          }
+          newString += (p.random(100) < this.t.growChance) ? "FF" : "F";
           break;
         case 'B':
           if (p.random(100) < 50) {
@@ -995,29 +1051,53 @@ class PlantSystem {
     this.lstr = newString;
   }
 }
+
 new p5(function(p) {
   let pl;
+  let current = TREES.length - 1;
+  let grown = 0;
+
+  const pad = n => String(n).padStart(2, '0');
+
+  function plant(i) {
+    current = i;
+    pl = new PlantSystem(p, TREES[i]);
+    grown = 0;
+    document.getElementById('tree-count').textContent = pad(i + 1) + ' / ' + pad(TREES.length);
+    document.getElementById('tree-name').textContent = TREES[i].name;
+    document.getElementById('tree-note').textContent = TREES[i].note;
+    document.getElementById('tree-prev').disabled = (i === 0);
+    document.getElementById('tree-next').disabled = (i === TREES.length - 1);
+  }
+
   p.setup = function() {
     const w = window.innerWidth < 640 ? Math.min(window.innerWidth - 40, 360) : 360;
     const h = window.innerWidth < 640 ? Math.round(w * 1.2) : 480;
     const cnv = p.createCanvas(w, h, p.WEBGL);
     cnv.parent('plant-sim');
     p.colorMode(p.HSB, 360, 100, 100);
-    pl = new PlantSystem(p);
+    plant(current);
+
+    document.getElementById('plant-sim').addEventListener('click', () => plant(current));
+    document.getElementById('tree-prev').addEventListener('click', () => { if (current > 0) plant(current - 1); });
+    document.getElementById('tree-next').addEventListener('click', () => { if (current < TREES.length - 1) plant(current + 1); });
   };
+
   p.draw = function() {
     p.background('#3d5c3a');
     p.push();
     p.translate(0, p.height * 0.5 - 10);
     p.rotate(-0.5 * p.PI);
     p.rotateX(0.01 * p.PI * p.frameCount);
-    p.scale(0.9);
+    p.scale(TREES[current].scale);
     pl.display();
     p.pop();
-    if (p.frameCount < 12) {
+    if (grown < 11) {
       pl.expand();
+      grown++;
     }
   };
+
   p.windowResized = function() {
     const w = window.innerWidth < 640 ? Math.min(window.innerWidth - 40, 360) : 360;
     const h = window.innerWidth < 640 ? Math.round(w * 1.2) : 480;
