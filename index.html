@@ -160,6 +160,28 @@
             color: var(--moss);
         }
 
+		/* ── WIDE TREE: landscape canvas, full width of the window ──
+		   Switched on by the tree switcher (class "wide" on .intro-row)
+		   only for trees marked wide: true. */
+		.intro-row.wide {
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+		.intro-row.wide .intro-graphic {
+            width: 100%;
+        }
+
+		.intro-row.wide #plant-sim {
+            width: 100vw;
+            margin-left: calc(50% - 50vw);   /* break out of the page column, edge to edge */
+        }
+
+		.intro-row.wide #plant-sim canvas {
+            border-radius: 0;
+            opacity: 1; 
+        }
+
 		.tree-note {
             font-family: var(--serif);
             font-size: 0.85rem;
@@ -765,9 +787,9 @@
     	</div>
     	<div class="tree-switch">
         	<button id="tree-prev" aria-label="previous tree">←</button>
-        	<span id="tree-count">02 / 02</span>
+        	<span id="tree-count">03 / 03</span>
         	<button id="tree-next" aria-label="next tree">→</button>
-        	<span id="tree-name">Tabebuia aurea</span>
+        	<span id="tree-name">Samanea saman</span>
     	</div>
 	</div>                  <!-- closes .intro-graphic -->
 
@@ -791,9 +813,7 @@
 
 	</div>                              <!-- closes .intro-row -->
 
-    <p class="tree-note" id="tree-note">The tree above is a Tabebuia aurea — the Silver Trumpet Tree, originally from the dry woodlands of South America. There are a few of these right outside my apartment. 
-    Tabebuia aurea has a deeply cracked, furrowed bark, and termites take full advantage of this by building their tunnels into every crevice using the red laterite soil of this part of Bangalore. 
-    By the time the flowers arrive, the tree is encased in that earthy red, with no leaves, just clusters of bright saturated yellow on top. I find the palette really pleasing.</p>
+    <p class="tree-note" id="tree-note">The tree above is a Samanea saman, the rain tree, originally from Central and South America. Its leaflets fold shut in the evening and under heavy cloud, so rain falls straight through the crown, and the grass beneath a rain tree often stays greener than the ground around it. Planted along Bangalore's roads from the nineteenth century onward, its low, arching limbs spread wider than the tree is tall, and on the old avenues of south Bangalore they meet overhead, tur.</p>
    
     <div class="section-marker">
         <span>the patches</span>
@@ -950,6 +970,9 @@
 // ── Plant L-System Simulation ──
 // Each tree is one entry. Oldest first; the page opens on the last one.
 // To add a new tree, copy an entry, change the values, and add it at the end.
+// Trees with model: true use the newer renderer (ModelTree): the tree is built
+// once as a 3D model and then only spun, which keeps big trees smooth.
+// Trees with wide: true get a landscape canvas that runs the full width of the page.
 const TREES = [
   {
     name: "Tabebuia rosea",
@@ -968,6 +991,62 @@ const TREES = [
     weightStep: 0.75, brightnessStep: 1.15, hueStep: 0,
     growChance: 42,
     blossom: [51, 94, 100], blossomSize: 6
+  },
+  {
+    name: "Samanea saman",
+    note: "The tree above is my best attempt at recreating a Samanea saman, the rain tree. Its leaflets fold shut in the evening and under heavy rain, allowing water to fall straight through the crown and water the ground it grows on. The grass beneath a rain tree often stays greener than the ground around it, imparting a certain je ne sais quoi, making it slightly more magical than other trees. With its unmistakable umbrella-shaped canopy, I can't imagine a tree better fitting its name, or a city better suited to its popularity than rainy Bengaluru.\n\nPlanted along Bangalore's roads from the nineteenth century onward, its low, arching limbs spread wide across many of the iconic streets of south Bangalore; meeting overhead, they turn streets into long green tunnels. Few trees did more to make this the Garden City.",
+    model: true,                       // drawn by ModelTree
+    wide: true,                        // landscape, full width of the page
+    sky: "linear-gradient(to bottom, #3f86c4 0%, #7fb6de 55%, #cfe6f3 100%)",   // 3 clear blue
+    aspect: 250 / 600,                 // canvas height ÷ width
+    designW: 600, designH: 250,        // canvas size the tree was designed at in the p5 editor
+    generations: 9,
+    spin: 0.002,
+
+    len: 5,              // length of one segment
+    angle: 0.16,         // branch spread (fraction of PI)
+    limbAngle: 0.3,      // how far each limb leans out where it leaves the trunk
+    bend: 0.06,          // extra outward bend at each joint along the limb
+    angleX: 0.6,         // twist into 3D at each branch (fraction of PI)
+    scale: 0.45,          // size on the design canvas
+
+    startWeight: 20,     // branch thickness where the limbs start
+    trunkBase: 18,       // trunk radius at the ground (the flare)
+    trunkTop: 9,         // trunk radius where the limbs split
+    startBrightness: 19, // bark brightness
+    startHue: 20,        // bark colour
+    saturation: 100,
+    weightStep: 0.55,    // each level up is this much thinner
+    brightnessStep: 1.15,// ...and this much brighter
+    hueStep: 0,          // ...and shifts colour by this much
+
+    leafHue: 78,         // fresh green (HSB hue)
+    leafSat: 75,
+    leafBright: 60,
+    leafSize: 10,        // size of each leaf pad
+    leafFrom: 45,        // tips fewer than this many segments from the ground stay bare
+    flower: [335, 45, 100], // pale pink
+    flowerEvery: 15,      // about one leaf in 5 is a flower
+
+    rules: {
+      S: p => "TTTTTTTTTTTTTTTTTTTTA",
+      A: p => {
+        const n = p.floor(p.random(6, 9));   // 6, 7 or 8 limbs
+        let s = "";
+        for (let i = 0; i < n; i++) {
+          s += "/[uLg[urfBd]og[urfBd]og[urfBd]ogBd]";
+        }
+        return s;
+      },
+      g: p => (p.random(100) < 50 ? "GGGg" : "GGg"),   // limb tip adds 2–3 segments per generation
+      F: p => (p.random(100) < 42 ? "FFf" : "Ff"),
+      B: p => {
+        if (p.random(100) < 90) {
+          return p.random(100) < 80 ? "[ullFBd][urFBd]" : "[ulFBd][urrFBd]";
+        }
+        return "FB";
+      }
+    }
   }
 ];
 
@@ -1052,28 +1131,202 @@ class PlantSystem {
   }
 }
 
+// ── Rain-tree renderer ──
+// Same turtle-reading idea as PlantSystem, but it draws cylinders, a tapered
+// trunk and leaf pads into a 3D model once per generation, then just shows it.
+class ModelTree {
+  constructor(p, t) {
+    this.p = p;
+    this.t = t;
+    this.lstr = "S";
+    this.geom = null;
+  }
+
+  // rewrite every symbol using this tree's rules
+  expand() {
+    const rules = this.t.rules;
+    let next = "";
+    for (const c of this.lstr) {
+      next += rules[c] ? rules[c](this.p) : c;
+    }
+    this.lstr = next;
+  }
+
+  // throw away the old model and build a new one from the current string
+  rebuild() {
+    const p = this.p;
+    if (this.geom) p.freeGeometry(this.geom);
+    this.geom = p.buildGeometry(() => this.build());
+  }
+
+  display() {
+    if (!this.geom) return;
+    this.p.noStroke();
+    this.p.model(this.geom);
+  }
+
+  // free the model when switching to another tree
+  dispose() {
+    if (this.geom) this.p.freeGeometry(this.geom);
+    this.geom = null;
+  }
+
+  build() {
+    const p = this.p, t = this.t;
+    let sWeight = t.startWeight;
+    let bright = t.startBrightness;
+    let hue = t.startHue;
+    let pathLen = 0;                                        // segments walked from the ground
+    const stack = [];                                       // pathLen saved at each branch point
+    const trunkSegs = (this.lstr.match(/T/g) || []).length; // how many trunk segments there are
+    p.noStroke();
+
+    for (let i = 0; i < this.lstr.length; i++) {
+      const c = this.lstr[i];
+      switch (c) {
+        case 'T': {                        // trunk: tapered, thick at the ground
+          const f1 = pathLen / trunkSegs;
+          const f2 = (pathLen + 1) / trunkSegs;
+          p.fill(hue, t.saturation, bright);
+          this.taperedSegment(this.trunkRadius(f1), this.trunkRadius(f2), t.len);
+          p.translate(t.len, 0, 0);
+          pathLen++;
+          break;
+        }
+        case 'G':                          // limb segment
+        case 'F':                          // twig segment
+          p.fill(hue, t.saturation, bright);
+          p.push();
+          p.translate(t.len / 2, 0, 0);
+          p.rotateZ(p.HALF_PI);            // cylinders stand along y; lay it along the branch
+          p.cylinder(sWeight / 2, t.len, 5, 1, false, false);
+          p.pop();
+          p.translate(t.len, 0, 0);
+          pathLen++;
+          if (c === 'F' && pathLen >= t.leafFrom) {   // leaves along outer twigs
+            p.push();
+            p.rotateX(p.radians(137.5 * i));          // spiral around the twig
+            p.translate(-t.len / 2, t.leafSize, 0);   // back to mid-twig, out to the side
+            this.leaf(i, t.leafSize * 0.8);
+            p.pop();
+          }
+          break;
+        case 'l':
+          p.rotate(-t.angle * p.PI);
+          p.rotateX(-t.angleX * p.PI);
+          break;
+        case 'r':
+          p.rotate(t.angle * p.PI);
+          p.rotateX(t.angleX * p.PI);
+          break;
+        case 'L':                          // lean the limb away from the trunk
+          p.rotate(-t.limbAngle * p.PI);
+          break;
+        case 'o':                          // bend the limb a little further out
+          p.rotate(-t.bend * p.PI);
+          break;
+        case '/':                          // turn around the trunk by the golden angle
+          p.rotateX(p.radians(137.5));
+          break;
+        case '[':
+          p.push();
+          stack.push(pathLen);
+          break;
+        case ']':
+          p.pop();
+          pathLen = stack.pop();
+          break;
+        case 'u':
+          sWeight *= t.weightStep;
+          bright *= t.brightnessStep;
+          hue = (hue + t.hueStep) % 360;
+          break;
+        case 'd':
+          sWeight /= t.weightStep;
+          bright /= t.brightnessStep;
+          hue = (hue - t.hueStep + 360) % 360;
+          break;
+        case 'B':                          // leaf pad at a branch tip (outer tips only)
+          if (pathLen < t.leafFrom) break;
+          this.leaf(i, t.leafSize);
+          break;
+      }
+    }
+  }
+
+  // one leaf pad, or an occasional pink flower
+  leaf(i, size) {
+    const p = this.p, t = this.t;
+    p.push();
+    if (i % t.flowerEvery === 0) {
+      p.fill(...t.flower);
+    } else {
+      p.fill(t.leafHue + ((i * 7) % 20), t.leafSat, t.leafBright + ((i * 13) % 15));
+    }
+    p.ellipsoid(size, size * 0.5, size, 6, 4);
+    p.pop();
+  }
+
+  // trunk radius at height f (0 = ground, 1 = where the limbs split)
+  trunkRadius(f) {
+    const t = this.t;
+    return t.trunkTop + (t.trunkBase - t.trunkTop) * (1 - f) * (1 - f);
+  }
+
+  // a tube along the x-axis, radius r1 at the start and r2 at the end
+  taperedSegment(r1, r2, len, sides = 10) {
+    const p = this.p;
+    p.beginShape(p.TRIANGLE_STRIP);
+    for (let s = 0; s <= sides; s++) {
+      const a = p.TWO_PI * s / sides;
+      p.vertex(0,   r1 * Math.cos(a), r1 * Math.sin(a));
+      p.vertex(len, r2 * Math.cos(a), r2 * Math.sin(a));
+    }
+    p.endShape();
+  }
+}
+
 new p5(function(p) {
   let pl;
   let current = TREES.length - 1;
   let grown = 0;
+  const row = document.querySelector('.intro-row');
 
   const pad = n => String(n).padStart(2, '0');
 
+  // canvas size for the tree being shown
+  function canvasSize() {
+    const t = TREES[current];
+    if (t.wide) {
+      // landscape, the full width of the window (height capped so it fits on screen)
+      const w = document.documentElement.clientWidth;
+      const h = Math.round(Math.max(240, Math.min(w * t.aspect, window.innerHeight * 0.8)));
+      return [w, h];
+    }
+    // the original portrait size
+    const w = window.innerWidth < 640 ? Math.min(window.innerWidth - 40, 360) : 360;
+    const h = window.innerWidth < 640 ? Math.round(w * 1.2) : 480;
+    return [w, h];
+  }
+
   function plant(i) {
+    if (pl && pl.dispose) pl.dispose();      // free the old rain-tree model, if any
     current = i;
-    pl = new PlantSystem(p, TREES[i]);
+    const t = TREES[i];
+    pl = t.model ? new ModelTree(p, t) : new PlantSystem(p, t);
     grown = 0;
+    row.classList.toggle('wide', !!t.wide);  // full-width layout only for wide trees
+    document.getElementById('plant-sim').style.background = t.sky || '';
+    p.resizeCanvas(...canvasSize());         // landscape or portrait, per tree
     document.getElementById('tree-count').textContent = pad(i + 1) + ' / ' + pad(TREES.length);
-    document.getElementById('tree-name').textContent = TREES[i].name;
-    document.getElementById('tree-note').textContent = TREES[i].note;
+    document.getElementById('tree-name').textContent = t.name;
+    document.getElementById('tree-note').textContent = t.note;
     document.getElementById('tree-prev').disabled = (i === 0);
     document.getElementById('tree-next').disabled = (i === TREES.length - 1);
   }
 
   p.setup = function() {
-    const w = window.innerWidth < 640 ? Math.min(window.innerWidth - 40, 360) : 360;
-    const h = window.innerWidth < 640 ? Math.round(w * 1.2) : 480;
-    const cnv = p.createCanvas(w, h, p.WEBGL);
+    const cnv = p.createCanvas(...canvasSize(), p.WEBGL);
     cnv.parent('plant-sim');
     p.colorMode(p.HSB, 360, 100, 100);
     plant(current);
@@ -1084,24 +1337,38 @@ new p5(function(p) {
   };
 
   p.draw = function() {
-    p.background('#3d5c3a');
+    const t = TREES[current];
+    if (t.sky) p.clear();            // transparent: the sky behind shows through
+    else p.background('#3d5c3a');    // the other trees keep their moss green
+
+    // rain tree: grow one generation and rebuild its model, until it's done
+    if (t.model && grown < t.generations) {
+      pl.expand();
+      pl.rebuild();
+      grown++;
+    }
+
+    // the rain tree scales with its canvas (fit = how much bigger than the design canvas);
+    // the older trees keep their fixed size
+    const fit = t.model ? Math.min(p.width / t.designW, p.height / t.designH) : 1;
+
     p.push();
-    p.translate(0, p.height * 0.5 - 10);
+    p.translate(0, p.height * 0.5 - 10 * fit);
     p.rotate(-0.5 * p.PI);
-    p.rotateX(0.01 * p.PI * p.frameCount);
-    p.scale(TREES[current].scale);
+    p.rotateX((t.spin || 0.01) * p.PI * p.frameCount);;
+    p.scale(t.scale * fit);
     pl.display();
     p.pop();
-    if (grown < 11) {
+
+    // older trees: grow one generation per frame, as before
+    if (!t.model && grown < 11) {
       pl.expand();
       grown++;
     }
   };
 
   p.windowResized = function() {
-    const w = window.innerWidth < 640 ? Math.min(window.innerWidth - 40, 360) : 360;
-    const h = window.innerWidth < 640 ? Math.round(w * 1.2) : 480;
-    p.resizeCanvas(w, h);
+    p.resizeCanvas(...canvasSize());
   };
 });
 </script>
