@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jagrut Amuri — Biologist & Storyteller</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-forest: #1a3a2e;
+            --color-moss: #4a7c59;
+            --color-sage: #8b9d83;
+            --color-sand: #e8d5b7;
+            --color-clay: #c17a5c;
+            --color-mist: #e5e9ec;
+            --color-ink: #2d2d2d;
+            --color-paper: #faf8f5;
+
+            --font-display: 'Space Mono', monospace;
+            --font-body: 'Lora', serif;
+            --font-sans: 'Fragment Mono', monospace;
+
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 2rem;
+            --space-lg: 4rem;
+            --space-xl: 6rem;
+            --space-2xl: 8rem;
+            --grid: rgba(61, 92, 58, 0.08);
+
+            --nav-h: 66px; /* updated by script to the real nav height */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 18px;
+            line-height: 1.7;
+            color: var(--color-ink);
+            background-color: var(--color-paper);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+        }
+
+        h1 { font-size: clamp(2.2rem, 6vw, 4.5rem); }
+        h2 { font-size: clamp(1.6rem, 4vw, 2.8rem); }
+        h3 { font-size: clamp(1.2rem, 2.5vw, 1.7rem); }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+            white-space: nowrap;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-md);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Grid background */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(250, 248, 245, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(139, 157, 131, 0.2);
+            transition: all 0.4s ease;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-sm) var(--space-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-forest);
+            text-decoration: none;
+            letter-spacing: 0.08em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--space-md);
+        }
+
+        .nav-links a {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--color-forest);
+            text-decoration: none;
+            letter-spacing: 0.12em;
+            text-transform: lowercase;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--color-moss);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--color-moss);
+        }
+
+        /* Hero — compact, no longer full-screen */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: calc(var(--nav-h) + var(--space-lg)) var(--space-md) var(--space-lg);
+            overflow: hidden;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(139, 157, 131, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(193, 122, 92, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, var(--color-paper) 0%, var(--color-mist) 100%);
+            z-index: -1;
+        }
+
+        .hero-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            opacity: 0.30;
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-info {
+            margin-bottom: var(--space-sm);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.2s forwards;
+        }
+
+        .hero-name {
+            font-size: clamp(2.8rem, 6vw, 5rem);
+            color: var(--color-moss);
+            margin-bottom: var(--space-xs);
+            letter-spacing: -0.03em;
+        }
+
+        .hero-subtitle {
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            font-weight: 400;
+            color: var(--color-sage);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+
+        .hero-description {
+            font-size: clamp(1.1rem, 2vw, 1.35rem);
+            color: var(--color-forest);
+            margin-bottom: var(--space-md);
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.4s forwards;
+        }
+
+        .hero-quote {
+            font-family: var(--font-display);
+            font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+            font-style: italic;
+            color: var(--color-clay);
+            max-width: 640px;
+            margin: 0 auto;
+            padding: var(--space-sm) var(--space-md);
+            border-left: 4px solid var(--color-moss);
+            background: rgba(139, 157, 131, 0.05);
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.6s forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        section {
+            padding: var(--space-lg) 0;
+        }
+
+        .section-header {
+            margin-bottom: var(--space-md);
+        }
+
+        .section-label {
+            font-family: var(--font-sans);
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--color-clay);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: var(--space-xs);
+        }
+
+        .section-title {
+            color: var(--color-forest);
+        }
+
+        .lead-text {
+            font-size: 1.2rem;
+            color: var(--color-forest);
+            margin-bottom: var(--space-sm);
+        }
+
+        /* About — text beside image */
+        .about {
+            background: var(--color-paper);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+            gap: var(--space-lg);
+            align-items: center;
+        }
+
+        .about-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .about-image img {
+            display: block;
+            width: 100%;
+            max-height: 380px;
+            object-fit: cover;
+            border-radius: 4px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Principles — same cards, tighter */
+        .principles {
+            background: var(--color-forest);
+            color: var(--color-paper);
+        }
+
+        .principles .section-label {
+            color: var(--color-sand);
+        }
+
+        .principles .section-title {
+            color: var(--color-paper);
+        }
+
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .principle-card {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .principle-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .principle-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .principle-number {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-sage);
+            margin-bottom: 0.25rem;
+            opacity: 0.5;
+        }
+
+        .principle-card h3 {
+            color: var(--color-sand);
+            margin-bottom: var(--space-sm);
+            font-size: 1.2rem;
+        }
+
+        .principle-card p {
+            color: var(--color-mist);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+        }
+
+        .principle-card p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ── WORK: three practice tabs ── */
+        .work {
+            padding: var(--space-lg) 0 var(--space-xl);
+        }
+
+        .practice-tabs {
+            position: sticky;
+            top: var(--nav-h);
+            z-index: 50;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: var(--space-xs);
+            padding: var(--space-xs) 0;
+            margin-bottom: var(--space-md);
+            background: rgba(250, 248, 245, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .practice-tab {
+            appearance: none;
+            font: inherit;
+            text-align: left;
+            cursor: pointer;
+            padding: 0.85rem 1.1rem;
+            border: 1.5px solid var(--color-sage);
+            border-radius: 6px;
+            background: white;
+            color: var(--color-forest);
+            transition: background 0.25s, border-color 0.25s, color 0.25s;
+        }
+
+        .practice-tab:hover {
+            border-color: var(--color-moss);
+        }
+
+        .practice-tab:focus-visible {
+            outline: 2px solid var(--color-clay);
+            outline-offset: 2px;
+        }
+
+        .tab-label {
+            display: block;
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-clay);
+        }
+
+        .tab-title {
+            display: block;
+            margin-top: 0.2rem;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(0.95rem, 1.8vw, 1.3rem);
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        .practice-tab[aria-selected="true"] {
+            background: var(--color-forest);
+            border-color: var(--color-forest);
+            color: var(--color-paper);
+        }
+
+        .practice-tab[aria-selected="true"] .tab-label {
+            color: var(--color-sand);
+        }
+
+        .practice-panel {
+            animation: panelIn 0.4s ease;
+        }
+
+        @keyframes panelIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Practice intro — text beside image */
+        .practice-intro {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+            gap: var(--space-lg);
+            align-items: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .practice-intro p:last-child {
+            margin-bottom: 0;
+        }
+
+        .practice-image img {
+            display: block;
+            width: 100%;
+            max-height: 340px;
+            object-fit: cover;
+            border-radius: 4px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Projects — all open, images beside text */
+        .projects {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .project {
+            padding: var(--space-md) var(--space-lg);
+            background: white;
+            border-left: 4px solid var(--color-moss);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            transition: box-shadow 0.4s ease;
+        }
+
+        .project:hover {
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .project.ecology-project {
+            border-left: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .project-header {
+            margin-bottom: var(--space-md);
+        }
+
+        .project-title {
+            color: var(--color-forest);
+            margin-bottom: var(--space-xs);
+        }
+
+        .project-meta {
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            color: var(--color-sage);
+            display: flex;
+            gap: var(--space-xs);
+            flex-wrap: wrap;
+        }
+
+        .project-body {
+            display: grid;
+            grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+            gap: var(--space-md);
+            align-items: start;
+        }
+
+        /* Alternate image side for rhythm (text keeps the wider column) */
+        .project:nth-child(even) .project-body {
+            grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+        }
+
+        .project:nth-child(even) .project-media {
+            order: 2;
+        }
+
+        .project-media {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .project-media img {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 260px;
+            object-fit: cover;
+            border-radius: 4px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .project-media.single img {
+            max-height: 360px;
+        }
+
+        .project-media.trio {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .project-media.trio img {
+            height: 170px;
+            max-height: none;
+        }
+
+        .project-media.trio img:first-child {
+            grid-column: 1 / -1;
+            height: 220px;
+        }
+
+        .project-text p {
+            margin-bottom: var(--space-sm);
+        }
+
+        .project-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .project-bridge {
+            color: var(--color-moss);
+            font-size: 1.2rem;
+            line-height: 1.5;
+        }
+
+        .role-section h4,
+        .reflection h4 {
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--color-forest);
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-xs);
+            text-transform: uppercase;
+        }
+
+        .role-section p {
+            margin-bottom: var(--space-sm);
+        }
+
+        .reflection {
+            margin-top: var(--space-md);
+            padding: var(--space-md);
+            background: linear-gradient(135deg, rgba(139, 157, 131, 0.1), rgba(193, 122, 92, 0.1));
+            border-left: 4px solid var(--color-clay);
+        }
+
+        .reflection p {
+            color: var(--color-forest);
+            font-style: italic;
+        }
+
+        /* What's Next */
+        .next {
+            padding: var(--space-lg) 0 var(--space-xl);
+        }
+
+        .next-projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-md);
+            align-items: stretch;
+        }
+
+        .next-project {
+            padding: var(--space-md);
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+            height: 100%;
+        }
+
+        .next-project.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .next-project:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .next-project h3 {
+            color: var(--color-forest);
+            margin-bottom: var(--space-sm);
+            font-size: 1.3rem;
+        }
+
+        .next-project p {
+            color: var(--color-ink);
+        }
+
+        a.next-project-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        a.next-project-link .next-project {
+            cursor: pointer;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--color-forest);
+            color: var(--color-paper);
+            padding: var(--space-xl) 0 var(--space-lg);
+            text-align: center;
+        }
+
+        .footer-text {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+            color: var(--color-sand);
+            cursor: pointer;
+            transition: transform 0.8s ease;
+        }
+
+        .footer-year {
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            color: var(--color-sage);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: var(--space-sm);
+            }
+
+            .nav-links a {
+                font-size: 0.85rem;
+            }
+
+            .hero {
+                padding: calc(var(--nav-h) + var(--space-md)) var(--space-md) var(--space-md);
+            }
+
+            section,
+            .work,
+            .next {
+                padding: var(--space-md) 0;
+            }
+
+            .about-grid,
+            .practice-intro,
+            .project-body,
+            .project:nth-child(even) .project-body {
+                grid-template-columns: 1fr;
+                gap: var(--space-md);
+            }
+
+            .practice-intro {
+                margin-bottom: var(--space-md);
+            }
+
+            .project:nth-child(even) .project-media {
+                order: 0;
+            }
+
+            /* Paired images sit side by side on small screens to save scrolling */
+            .project-media:not(.single):not(.trio) {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: var(--space-xs);
+            }
+
+            .project-media:not(.single):not(.trio) img {
+                height: 200px;
+                max-height: none;
+            }
+
+            .project {
+                padding: var(--space-md);
+            }
+
+            .practice-tab {
+                padding: 0.6rem 0.7rem;
+            }
+
+            .tab-label {
+                font-size: 0.65rem;
+                letter-spacing: 0.1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: 16px;
+            }
+
+            .container {
+                padding: 0 var(--space-sm);
+            }
+
+            .nav-container {
+                padding: var(--space-sm);
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                gap: var(--space-xs);
+            }
+
+            .nav-links a {
+                font-size: 0.8rem;
+            }
+
+            .tab-label {
+                display: none;
+            }
+
+            .tab-title {
+                font-size: 0.85rem;
+                margin-top: 0;
+            }
+
+            .project {
+                padding: var(--space-sm);
+            }
+
+            .project-media:not(.single):not(.trio) img {
+                height: 140px;
+            }
+
+            .project-media.trio img {
+                height: 120px;
+            }
+
+            .project-media.trio img:first-child {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">JA</a>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#principles">Principles</a>
+                <a href="#work">Work</a>
+                <a href="#next">What's Next</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="hero" class="hero">
+        <div class="hero-background"></div>
+        <div class="hero-image">
+            <img src="images/Page_1.jpeg" alt="Portfolio hero">
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-info">
+                    <h1 class="hero-name">Jagrut Amuri</h1>
+                    <p class="hero-subtitle">Biologist · Experience Designer · Artist</p>
+                </div>
+                <p class="hero-description">
+                    Exploring ways to enable a prosperous co-existence between humans, our technology and the rest of the natural world.
+                </p>
+                <div class="hero-quote">
+                    <p>Technology is inevitable; extractive and careless ways of using it are not.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-text">
+                    <div class="section-header">
+                        <span class="section-label">Motives</span>
+                        <h2 class="section-title">How I Work</h2>
+                    </div>
+                    <p class="lead-text">
+                        I work through research, workshops, fieldwork, writing to create meaningful interactions. Designing situations where people feel seen, heard, and capable of reflecting honestly on their relationship with the world.
+                    </p>
+                    <p>
+                        Underlying this is a belief that intelligence and meaning are values not exclusive to humans. I am motivated by a concern for what kinds of futures we are building, and who or what those futures make space for. I reject the binary between technological futures and empathy for life.
+                    </p>
+                </div>
+                <div class="about-image">
+                    <img src="images/How_i_work.jpeg" alt="How I work">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="principles" class="principles">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Philosophy</span>
+                <h2 class="section-title">Guiding Principles</h2>
+            </div>
+            <div class="principles-grid">
+                <div class="principle-card">
+                    <div class="principle-number">01</div>
+                    <h3>Expanding What Counts as Intelligence</h3>
+                    <p>
+                        I view intelligence as something that exists across living systems, expressed through how organisms sense, respond to, and make decisions in relation to their environments.
+                    </p>
+                    <p>
+                        My work aims to shift how intelligence is recognised, so that empathy and respect are not reserved for the human experience alone.
+                    </p>
+                </div>
+                <div class="principle-card">
+                    <div class="principle-number">02</div>
+                    <h3>Making Space for Technological Futures with Care for Life</h3>
+                    <p>
+                        I believe that technological futures are inevitable, but the values embedded within them are a choice.
+                    </p>
+                    <p>
+                        My work engages with technology as a potential ally in understanding life, within complex ecological and social systems. I explore how technological systems can be developed with appreciation and empathy toward the natural world.
+                    </p>
+                </div>
+                <div class="principle-card">
+                    <div class="principle-number">03</div>
+                    <h3>Learning Through Participation</h3>
+                    <p>
+                        I move away from rigid hierarchies in learning and design environments, towards spaces where people feel safe to ask questions and make mistakes.
+                    </p>
+                    <p>
+                        I approach learning as a shift in perspective, creating experiences that help people encounter multiple ways of seeing through sensory and participatory engagement.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="work" class="work">
+        <div class="container">
+            <h2 class="sr-only">Work</h2>
+
+            <div class="practice-tabs" role="tablist" aria-label="Practices">
+                <button class="practice-tab" role="tab" id="tab-workshops" aria-controls="workshops" aria-selected="true">
+                    <span class="tab-label">Practice I</span>
+                    <span class="tab-title">Workshops</span>
+                </button>
+                <button class="practice-tab" role="tab" id="tab-mediation" aria-controls="mediation" aria-selected="false" tabindex="-1">
+                    <span class="tab-label">Practice II</span>
+                    <span class="tab-title">Mediation</span>
+                </button>
+                <button class="practice-tab" role="tab" id="tab-ecology" aria-controls="ecology" aria-selected="false" tabindex="-1">
+                    <span class="tab-label">Practice III</span>
+                    <span class="tab-title">Ecology &amp; Field Work</span>
+                </button>
+            </div>
+
+            <!-- ── PRACTICE I: WORKSHOPS ── -->
+            <div class="practice-panel" role="tabpanel" id="workshops" aria-labelledby="tab-workshops">
+                <div class="practice-intro">
+                    <div>
+                        <p class="lead-text">
+                            I use workshops as a way to bridge together different ways of knowing, rather than treating learning as information transfer. They are designed as participatory spaces where people move between engaging with the content and each other.
+                        </p>
+                        <p>
+                            Across varied contexts, workshops have become a practical method for enabling shifts in perspective and shared inquiry.
+                        </p>
+                    </div>
+                    <div class="practice-image">
+                        <img src="images/Practice_1.jpeg" alt="Workshop practice">
+                    </div>
+                </div>
+
+                <div class="projects">
+                    <article class="project">
+                        <div class="project-header">
+                            <h3 class="project-title">Origami × Nature</h3>
+                            <div class="project-meta">
+                                <span>Science Gallery Bengaluru</span>
+                                <span>•</span>
+                                <span>Azim Premji University</span>
+                                <span>•</span>
+                                <span>RGH School</span>
+                            </div>
+                        </div>
+                        <div class="project-body">
+                            <div class="project-media">
+                                <img src="images/Origami_1.jpeg" alt="Origami workshop">
+                                <img src="images/Origami_3.jpeg" alt="Origami nature forms">
+                            </div>
+                            <div class="project-text">
+                                <p class="project-bridge">
+                                    <strong>The bridge:</strong> Bridging human and non-human intelligence through making. Using the art of origami as a way to observe, understand, and appreciate the ingenuity embedded in natural structures.
+                                </p>
+                                <p>
+                                    Participants observed patterns and forms in nature, then translated those observations into folded paper — working through spirals, tessellations, and flight mechanics with their hands.
+                                    By understanding how and why natural structures such as insect wings and leaves fold, we explored how shape, function, and movement can emerge from simple rules, experimenting with multiple folding approaches along the way.
+                                    Origami became a way to notice how nature uses the principles of folding to solve complex problems, elegantly.
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project">
+                        <div class="project-header">
+                            <h3 class="project-title">Visual Narrative</h3>
+                            <div class="project-meta">
+                                <span>Srishti Manipal Institute</span>
+                                <span>•</span>
+                                <span>Undergraduate Students</span>
+                            </div>
+                        </div>
+                        <div class="project-body">
+                            <div class="project-media">
+                                <img src="images/Srishti_1.jpeg" alt="Visual narrative workshop">
+                                <img src="images/Srishti_2.jpeg" alt="Narrative exploration">
+                            </div>
+                            <div class="project-text">
+                                <p class="project-bridge">
+                                    <strong>The bridge:</strong> Understanding how meaning shifts as stories move across mediums and senses.
+                                </p>
+                                <p>
+                                    This two-week, full-day workshop on visual narratives was designed and co-facilitated for second-year undergraduate students at Srishti Manipal University, developed with only three days of lead time and an open-ended brief.
+                                    The workshop took shape iteratively, adapting day by day in response to the group, with assessment growing directly out of student work and prioritising reflection and process over conventional evaluation.
+                                </p>
+                                <p>
+                                    We began by sharing personal stories and examining how narratives shape meaning, before tracing the roots of visual storytelling and exploring its cognitive dimensions.
+                                    We broke down the anatomy of a story and investigated how its elements translate across different design contexts — working through sound, music, and text as visual mediums, and using objects, origami, and stop-motion to animate ideas.
+                                    Movement and gesture opened up questions of embodied and non-verbal communication, and the workshop culminated in final projects where each student translated a chosen narrative into a photo series.
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project">
+                        <div class="project-header">
+                            <h3 class="project-title">Biomimicry</h3>
+                            <div class="project-meta">
+                                <span>Andaman Islands - ReefWatch</span>
+                                <span>•</span>
+                                <span>Government School Students</span>
+                            </div>
+                        </div>
+                        <div class="project-body">
+                            <div class="project-media single">
+                                <img src="images/Biomimicry_1.jpeg" alt="Biomimicry workshop">
+                            </div>
+                            <div class="project-text">
+                                <p class="project-bridge">
+                                    <strong>The bridge:</strong> Bridging nature and technological wonder through close observation of marine and terrestrial organisms, exploring how nature solves problems and adapts to complex conditions.
+                                </p>
+                                <p>
+                                    This workshop was designed and conducted while volunteering with Reefwatch, a marine conservation organisation, on the southernmost tip of the Andaman Islands in a place called Chidiyatapu — built for government school students to help deepen their understanding of their surroundings.
+                                    We walked through intertidal zones and coastal areas, observing organisms in their natural habitats, identifying species, and discussing how they function. Conversations moved between ecology and adaptation — exploring how animals manage heat, salinity, and movement.
+                                </p>
+                                <p>
+                                    Students drew their favourite organisms, picked out their most distinctive traits, and began thinking about how specific biological abilities might translate into human use. Biomimicry became a way to notice that sophisticated problem-solving already exists all around us.
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project">
+                        <div class="project-header">
+                            <h3 class="project-title">Art × River</h3>
+                            <div class="project-meta">
+                                <span>Khandepar–Mahdei River, Goa</span>
+                                <span>•</span>
+                                <span>Community Workshops</span>
+                            </div>
+                        </div>
+                        <div class="project-body">
+                            <div class="project-media trio">
+                                <img src="images/River_1.jpeg" alt="River workshop">
+                                <img src="images/River_2.jpeg" alt="River ecology">
+                                <img src="images/River_3.jpeg" alt="Community engagement">
+                            </div>
+                            <div class="project-text">
+                                <p class="project-bridge">
+                                    <strong>The bridge:</strong> Bringing together art, ecology, and community knowledge through shared time along the river.
+                                </p>
+                                <p>
+                                    These workshops were conducted across multiple locations along the Khandepar–Mahdei River in Goa, in collaboration with Bookworm Trust and OurRiver OurLife as part of a larger conservation effort in Goa. As part of the on-ground team, I was simultaneously conducting field surveys and designing and facilitating community workshops alongside local libraries.
+                                    We walked the river with field experts, identifying plants and species while weaving in traditional and lived knowledge that participants brought with them. Zines and artworks made from leaves, mud, and sand became a way of processing what we observed, and conversations opened up around local socio-ecological pressures like sand mining, fishing practices and the slow changes people had witnessed over lifetimes.
+                                    Much of the work was simply about listening: exchanging stories across generations, asking questions, and spending time with the river together.
+                                    We also introduced simple tools such as a flood monitoring app to support ongoing care and monitoring.
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <!-- ── PRACTICE II: MEDIATION ── -->
+            <div class="practice-panel" role="tabpanel" id="mediation" aria-labelledby="tab-mediation" hidden>
+                <div class="practice-intro">
+                    <div>
+                        <p class="lead-text">
+                            Mediation at Science Gallery is a form of informal education, where mediators support visitors in engaging with exhibits through conversation.
+                        </p>
+                        <p>
+                            I experienced mediation as a way of thinking alongside people. Conversations unfolded based on what visitors were drawn to, what felt unfamiliar, or what they wanted to spend time with.
+                            I tried to stay responsive, allowing learning to grow through dialogue and proximity with the objects.
+                        </p>
+                    </div>
+                    <div class="practice-image">
+                        <img src="images/Practice_2.jpeg" alt="Mediation practice">
+                    </div>
+                </div>
+
+                <div class="projects">
+                    <article class="project">
+                        <div class="project-header">
+                            <h3 class="project-title">Everyday Mediation</h3>
+                            <div class="project-meta">
+                                <span>Science Gallery Bengaluru</span>
+                                <span>•</span>
+                                <span>~40,000 visitors</span>
+                            </div>
+                        </div>
+                        <div class="project-body">
+                            <div class="project-media">
+                                <img src="images/Everyday_1.jpeg" alt="Everyday mediation">
+                                <img src="images/Everyday_2.jpeg" alt="Visitor engagement">
+                            </div>
+                            <div class="project-text">
+                                <p class="project-bridge">
+                                    <strong>Intention:</strong> Synthesising ideas in response to who I was speaking with, without losing complexity or wonder.
+                                </p>
+                                <p>
+                                    Conversations emerged through individual attention rather than scripted explanation. Mediation became a way to translate complex ideas into digestible chunks while preserving nuance.
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project">
+                        <div class="project-header">
+                            <h3 class="project-title">Student Learning Experiences</h3>
+                            <div class="project-meta">
+                                <span>Science Gallery Bengaluru</span>
+                                <span>•</span>
+                                <span>~10,000 students guided</span>
+                            </div>
+                        </div>
+                        <div class="project-body">
+                            <div class="project-media">
+                                <img src="images/SLE_1.jpeg" alt="Student learning experience">
+                                <img src="images/SLE_2.jpeg" alt="School visit">
+                            </div>
+                            <div class="project-text">
+                                <p class="project-bridge">
+                                    <strong>Intention:</strong> Creating conditions for curiosity and participation within structured learning settings.
+                                </p>
+                                <p>
+                                    Sessions worked with the energy students arrived with, gradually shaping it into shared attention and wonder. Objects became portals for discussion allowing linear learning to occur without relying on rigid instruction.
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project">
+                        <div class="project-header">
+                            <h3 class="project-title">Designed Experiences</h3>
+                            <div class="project-meta">
+                                <span>Science Gallery Bengaluru</span>
+                            </div>
+                        </div>
+                        <div class="project-body">
+                            <div class="project-media">
+                                <img src="images/DesignedExp_1.jpeg" alt="Designed experience">
+                                <img src="images/DesignedExp_2.png" alt="Workshop design">
+                            </div>
+                            <div class="project-text">
+                                <p class="project-bridge">
+                                    <strong>Intention:</strong> Using meticulously researched themes to encourage deeper connections with familiar topics, enabling novel experiences of the same space.
+                                </p>
+                                <p>
+                                    Created sessions on the concept of Umwelt, and designed walkthroughs that explored human sensory systems and the experience of slowing down time. These formats were used to examine how perception shapes understanding.
+                                </p>
+                                <p>
+                                    Developed Visual Bingo using close-up images to deepen engagement with the exhibits, inviting visitors to search for and notice elements that are often overlooked, and rethought feedback systems to encourage higher quality responses.
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="project">
+                        <div class="project-header">
+                            <h3 class="project-title">Beyond Mediation</h3>
+                            <div class="project-meta">
+                                <span>Science Gallery Bengaluru</span>
+                            </div>
+                        </div>
+                        <div class="project-body">
+                            <div class="project-media">
+                                <img src="images/Beyond_1.jpeg" alt="Beyond mediation work">
+                                <img src="images/Beyond_2.jpeg" alt="Learning resources">
+                            </div>
+                            <div class="project-text">
+                                <p class="project-bridge">
+                                    <strong>Intention:</strong> Strengthening informal learning through behind-the-scenes systems and creation of artefacts that extend the life of the exhibition.
+                                </p>
+                                <p>
+                                    Alongside mediation, I worked on coordination, scheduling, and review processes that enabled the gallery to function day to day.
+                                </p>
+                                <p>
+                                    This included coordinating with and maintaining records of SLEs, reviewing and onboarding mediators, and contributing to the designing of learning resources that carried the exhibition's ethos forward.
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <!-- ── PRACTICE III: ECOLOGY & FIELD WORK ── -->
+            <div class="practice-panel" role="tabpanel" id="ecology" aria-labelledby="tab-ecology" hidden>
+                <div class="practice-intro">
+                    <div>
+                        <p class="lead-text">
+                            My ecological work has been grounded in physical presence - being in forests, rivers and reefs over extended periods. Much of this work unfolded in difficult conditions, requiring empathy and a willingness to learn without clear answers.
+                        </p>
+                        <p>
+                            I have been drawn to roles that sit at the boundary between natural systems and human activity, contributing to conservation efforts while learning how environmental care is shaped by people and institutions. These next projects have fundamentally changed who I am and have heavily influenced how I see the world.
+                        </p>
+                    </div>
+                    <div class="practice-image">
+                        <img src="images/Practice_3.jpeg" alt="Ecology fieldwork">
+                    </div>
+                </div>
+
+                <div class="projects">
+                    <article class="project ecology-project">
+                        <div class="project-header">
+                            <h3 class="project-title">Riparian Ecology &amp; Restoration</h3>
+                            <div class="project-meta">
+                                <span>Khandepar River, Goa</span>
+                                <span>•</span>
+                                <span>Our River, Our Life (NGO)</span>
+                            </div>
+                        </div>
+                        <div class="project-body">
+                            <div class="project-media single">
+                                <img src="images/Riparian_1.png" alt="Riparian ecology work">
+                            </div>
+                            <div class="project-text">
+                                <p class="project-bridge">
+                                    <strong>Intention:</strong> Understanding the river's health and proposing restoration pathways through ecological and social lenses.
+                                </p>
+                                <div class="role-section">
+                                    <h4>My Role:</h4>
+                                    <p>
+                                        Carried out flora surveys along the river using ~100 m transects to document species diversity and riparian vegetation patterns for restoration planning.
+                                    </p>
+                                    <p>
+                                        Fieldwork was largely self-directed: scouting sites via maps, trekking to river edges, logging GPS-tagged observations, compiling data from ~50 transects across 25 km.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="reflection">
+                            <h4>How I Changed:</h4>
+                            <p>
+                                This work reshaped my understanding of where conservation comes from. It is inseparable from livelihoods, governments, and traditional knowledge. Taught me that the process of ecological restoration requires patience, trust, and attention to social realities as much as environmental data.
+                            </p>
+                        </div>
+                    </article>
+
+                    <article class="project ecology-project">
+                        <div class="project-header">
+                            <h3 class="project-title">Marine Ecology &amp; Restoration</h3>
+                            <div class="project-meta">
+                                <span>Chidiya Tapu, Andaman Islands</span>
+                                <span>•</span>
+                                <span>ReefWatch India (NGO)</span>
+                            </div>
+                        </div>
+                        <div class="project-body">
+                            <div class="project-media single">
+                                <img src="images/Marine_1.jpeg" alt="Marine ecology work">
+                            </div>
+                            <div class="project-text">
+                                <p class="project-bridge">
+                                    <strong>Intention:</strong> Learning how coral reef systems function and recover while supporting conservation work.
+                                </p>
+                                <div class="role-section">
+                                    <h4>My Role:</h4>
+                                    <p>
+                                        Assisted with reef monitoring and coral restoration work, learning to scuba dive and documenting coral growth.
+                                    </p>
+                                    <p>
+                                        Facilitated nature walks around the base. Due to its close proximity to marine, intertidal, mangrove and rainforest ecosystems, these walks usually were full of wonder and learning.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="reflection">
+                            <h4>How I Changed:</h4>
+                            <p>
+                                This was my first sustained experience of conservation work and living within a natural system. Everyday mindful contact with damaged reef systems reshaped how I understood ecological responsibility, and what it means to learn from a place rather than about it.
+                            </p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="next" class="next">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">What's Next?</h2>
+            </div>
+            <div class="next-projects">
+                <div class="next-project">
+                    <h3>Biomimicry Speculative Card Game</h3>
+                    <p>
+                        Developing a speculative card game inspired by Biomimicry & AskNature, where players assume attributes of different organisms and combine them to respond to shared challenges.
+                    </p>
+                </div>
+                <a href="https://jamuri.notion.site/ce3109d3f0a74a02b29534ee02955854?v=61c9b3e7c0fb4e9b86d68064f9afbf44" class="next-project-link" target="_blank">
+                    <div class="next-project">
+                        <h3>Origami Sculptures</h3>
+                        <p>
+                            Working on a series of origami-based kinetic sculptures as an art practice. Exploring how paper folding and mechanical principles can result in movement and play.
+                        </p>
+                    </div>
+                </a>
+                <a href="boids.html" class="next-project-link">
+                    <div class="next-project">
+                        <h3>Simulating Natural Behaviour with Code</h3>
+                        <p>
+                            Learning to code using p5.js to simulate natural behaviours like slime mold movement and bird murmurations. This work is exploratory and idea-led, illustrating on how simple rules give rise to complex, emergent biological patterns.
+                        </p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">Fin!</p>
+            <p class="footer-year">© 2026 Jagrut Amuri</p>
+        </div>
+    </footer>
+
+    <script>
+        const nav = document.querySelector('.nav');
+
+        // Keep the sticky tab bar tucked exactly under the nav
+        function setNavHeight() {
+            document.documentElement.style.setProperty('--nav-h', nav.offsetHeight + 'px');
+        }
+        setNavHeight();
+        window.addEventListener('resize', setNavHeight);
+
+        // Smooth scroll for in-page links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (!target) return;
+                e.preventDefault();
+                window.scrollTo({
+                    top: target.offsetTop - nav.offsetHeight,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Fade-in on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.next-project, .principle-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Active nav link + nav shadow
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-links a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const scrollPosition = window.pageYOffset + 100;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
+            });
+
+            nav.style.boxShadow = window.pageYOffset > 100 ? '0 2px 20px rgba(0, 0, 0, 0.1)' : 'none';
+        });
+
+        // Parallax on the hero background
+        const heroBackground = document.querySelector('.hero-background');
+        const hero = document.querySelector('.hero');
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            if (heroBackground && scrolled < hero.offsetHeight) {
+                heroBackground.style.transform = `translateY(${scrolled * 0.5}px)`;
+                heroBackground.style.opacity = 1 - (scrolled / hero.offsetHeight);
+            }
+        });
+
+        // ── PRACTICE TABS ──
+        const tabBar = document.querySelector('.practice-tabs');
+        const tabs = Array.from(document.querySelectorAll('.practice-tab'));
+        const panels = tabs.map(tab => document.getElementById(tab.getAttribute('aria-controls')));
+
+        function activateTab(tab, { focus = false, scroll = false } = {}) {
+            tabs.forEach((t, i) => {
+                const isActive = t === tab;
+                t.setAttribute('aria-selected', isActive);
+                t.tabIndex = isActive ? 0 : -1;
+                panels[i].hidden = !isActive;
+            });
+            if (focus) tab.focus();
+
+            // If the reader has scrolled past the top of the work, bring the new tab's start into view
+            if (scroll) {
+                const panel = panels[tabs.indexOf(tab)];
+                const offset = nav.offsetHeight + tabBar.offsetHeight + 16;
+                const panelTop = panel.getBoundingClientRect().top + window.pageYOffset - offset;
+                if (window.pageYOffset > panelTop) {
+                    window.scrollTo({ top: panelTop, behavior: 'smooth' });
+                }
+            }
+        }
+
+        tabs.forEach((tab, i) => {
+            tab.addEventListener('click', () => {
+                activateTab(tab, { scroll: true });
+                history.replaceState(null, '', '#' + panels[i].id);
+            });
+
+            // Arrow keys move between tabs
+            tab.addEventListener('keydown', (e) => {
+                let next = null;
+                if (e.key === 'ArrowRight') next = tabs[(i + 1) % tabs.length];
+                if (e.key === 'ArrowLeft') next = tabs[(i - 1 + tabs.length) % tabs.length];
+                if (e.key === 'Home') next = tabs[0];
+                if (e.key === 'End') next = tabs[tabs.length - 1];
+                if (next) {
+                    e.preventDefault();
+                    activateTab(next, { focus: true });
+                }
+            });
+        });
+
+        // Links like portfolio.html#mediation open that tab directly
+        const linkedPanel = panels.findIndex(p => '#' + p.id === window.location.hash);
+        if (linkedPanel > -1) {
+            activateTab(tabs[linkedPanel]);
+            window.addEventListener('load', () => {
+                const work = document.getElementById('work');
+                window.scrollTo({ top: work.offsetTop - nav.offsetHeight });
+            });
+        }
+
+        // Footer easter egg
+        const footerText = document.querySelector('.footer-text');
+        let clickCount = 0;
+        footerText.addEventListener('click', () => {
+            clickCount++;
+            if (clickCount === 3) {
+                footerText.style.transform = 'rotate(360deg) scale(1.2)';
+                setTimeout(() => {
+                    footerText.style.transform = 'rotate(0deg) scale(1)';
+                }, 800);
+                clickCount = 0;
+            }
+        });
+    </script>
+</body>
+</html>
